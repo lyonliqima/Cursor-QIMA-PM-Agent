@@ -1,0 +1,13 @@
+---
+description: Safety rules for Jira and Confluence writes
+alwaysApply: true
+---
+
+# Atlassian Safety
+
+- Never create Jira Epics, tickets, issue links, or Confluence updates without a user-visible plan and explicit approval.
+- The user's first request to create tickets does not count as approval.
+- Before Jira creation, verify project key, issue types, required fields, and Epic association method.
+- Before Confluence writes, confirm the target space/page and write as draft when possible.
+- If metadata, permissions, or target project details are unclear, stop and ask before writing.
+- Report partial failures clearly and do not silently drop failed Jira items.

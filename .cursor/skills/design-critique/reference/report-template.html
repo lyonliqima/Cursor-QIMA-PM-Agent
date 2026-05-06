@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>{{TITLE}}</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --card: #ffffff;
+    --txt: #1f2233;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --crit: #dc2626;
+    --mod: #d97706;
+    --min: #16a34a;
+    --accent: #2563eb;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--txt); font: 14px/1.5 -apple-system, "Inter", sans-serif; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 24px 80px; }
+  header h1 { font-size: 24px; margin: 0 0 8px; }
+  header .meta { color: var(--muted); font-size: 13px; }
+  header .meta a { color: var(--accent); text-decoration: none; }
+  .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 24px 0; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .stat .n { font-size: 28px; font-weight: 600; }
+  .stat .l { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat.crit .n { color: var(--crit); }
+  .stat.mod .n { color: var(--mod); }
+  .stat.min .n { color: var(--min); }
+  section { margin: 32px 0; }
+  section h2 { font-size: 18px; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 16px; }
+  .finding { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 12px; }
+  .finding.crit { border-left-color: var(--crit); }
+  .finding.mod { border-left-color: var(--mod); }
+  .finding.min { border-left-color: var(--min); }
+  .finding h3 { font-size: 15px; margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: #f3f4f6; color: var(--muted); font-weight: 500; }
+  .badge.sev-crit { background: #fee2e2; color: var(--crit); }
+  .badge.sev-mod  { background: #fef3c7; color: var(--mod); }
+  .badge.sev-min  { background: #dcfce7; color: var(--min); }
+  .dims { margin: 6px 0 10px; }
+  .dims .badge { background: #eef2ff; color: var(--accent); margin-right: 4px; }
+  .evidence { background: #f9fafb; border-radius: 4px; padding: 10px 12px; font-family: ui-monospace, SF Mono, Menlo, monospace; font-size: 12px; color: var(--muted); margin: 10px 0; }
+  .evidence div { padding: 2px 0; }
+  .evidence a { color: var(--accent); text-decoration: none; }
+  .evidence a:hover { text-decoration: underline; }
+  .rec { background: #f0f9ff; border-left: 3px solid var(--accent); padding: 10px 12px; border-radius: 4px; margin-top: 8px; font-size: 13px; }
+  .rec strong { color: var(--accent); }
+  footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+  footer ul { padding-left: 20px; margin: 8px 0; }
+  .coverage { display: flex; gap: 8px; margin: 8px 0; }
+  .coverage .badge { background: #dcfce7; color: var(--min); }
+  .coverage .badge.warn { background: #fef3c7; color: var(--mod); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>{{TITLE}}</h1>
+    <div class="meta">{{META}}</div>
+  </header>
+
+  <div class="summary">{{SUMMARY_CARDS}}</div>
+
+  <div class="coverage">{{COVERAGE_BADGES}}</div>
+
+  {{SECTIONS}}
+
+  <footer>
+    <strong>Sources scanned</strong>
+    {{SOURCES}}
+  </footer>
+</div>
+</body>
+</html>

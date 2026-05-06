@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>QIMA PM Skills — write-prd · Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1714;
+    --paper:#f5efe6;
+    --paper-2:#ede5d6;
+    --muted:#6b6258;
+    --accent:#a4441f;
+    --serif:'Instrument Serif', Georgia, serif;
+    --sans:'IBM Plex Sans', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:11px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+  .page{
+    height:100vh;
+    padding:20px 28px 16px;
+    display:grid;
+    grid-template-rows:auto auto 1fr auto;
+    gap:14px;
+    max-width:1600px;
+    margin:0 auto;
+  }
+
+  /* masthead */
+  .mast{
+    border-bottom:1px solid var(--ink);
+    padding-bottom:10px;
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    align-items:end;
+    gap:24px;
+  }
+  .eyebrow{
+    font-size:9px;
+    font-weight:500;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:4px;
+  }
+  h1.title{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:36px;
+    line-height:0.95;
+    letter-spacing:-0.01em;
+  }
+  h1.title em{font-style:italic;color:var(--accent)}
+  .lede{
+    font-family:var(--serif);
+    font-size:14px;
+    font-style:italic;
+    color:var(--muted);
+    max-width:48ch;
+    line-height:1.35;
+  }
+  .lede b{color:var(--ink);font-style:normal;font-weight:400}
+  .meta{
+    font-size:9px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    text-align:right;
+    line-height:1.6;
+  }
+
+  /* workflow strip */
+  .flow{
+    display:grid;
+    grid-template-columns:repeat(11, 1fr);
+    border-top:1px solid var(--ink);
+    border-bottom:1px solid var(--ink);
+  }
+  .step{
+    padding:8px 8px 8px 10px;
+    border-right:1px solid rgba(26,23,20,0.25);
+    position:relative;
+    min-height:74px;
+    display:flex;
+    flex-direction:column;
+  }
+  .step:last-child{border-right:none}
+  .step.gate{background:var(--paper-2)}
+  .step.loop::before{
+    content:'↻';
+    position:absolute;top:4px;right:6px;
+    font-family:var(--serif);font-size:14px;color:var(--accent);
+  }
+  .step .n{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:18px;
+    color:var(--accent);
+    line-height:1;
+    margin-bottom:2px;
+  }
+  .step .t{
+    font-size:9.5px;
+    font-weight:600;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    margin-bottom:3px;
+  }
+  .step .d{
+    font-size:9.5px;
+    color:var(--muted);
+    line-height:1.35;
+  }
+  .step .gl{
+    margin-top:auto;
+    font-size:8px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:600;
+  }
+
+  /* main grid: 3 columns */
+  .body{
+    display:grid;
+    grid-template-columns:1.05fr 1.4fr 0.95fr;
+    gap:18px;
+    min-height:0;
+  }
+  .col{display:flex;flex-direction:column;min-height:0}
+  .sec-h{
+    font-family:var(--sans);
+    font-size:9px;
+    font-weight:600;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--accent);
+    padding-bottom:6px;
+    margin-bottom:10px;
+    border-bottom:1px solid var(--ink);
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .sec-h .num{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:14px;
+    color:var(--accent);
+    letter-spacing:0;
+    text-transform:none;
+  }
+  .sec-h .sub{
+    margin-left:auto;
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:11px;
+    color:var(--muted);
+    text-transform:none;
+    letter-spacing:0;
+    font-weight:400;
+  }
+
+  /* left col — file tree + layers */
+  .tree{
+    font-family:var(--mono);
+    font-size:10.5px;
+    line-height:1.7;
+    background:var(--paper-2);
+    padding:10px 12px;
+    border-left:2px solid var(--accent);
+    margin-bottom:14px;
+  }
+  .tree .pin{color:var(--accent);font-weight:500}
+  .tree .anno{color:var(--muted);font-family:var(--sans);font-size:9.5px;font-style:italic}
+
+  .layers{display:flex;flex-direction:column;gap:8px}
+  .layer{
+    border-top:1px dotted rgba(26,23,20,0.3);
+    padding-top:6px;
+  }
+  .layer:first-child{border-top:none;padding-top:0}
+  .l-h{
+    font-family:var(--serif);
+    font-size:15px;
+    line-height:1.2;
+    margin-bottom:2px;
+  }
+  .l-h .roman{
+    color:var(--accent);
+    font-style:italic;
+    font-size:11px;
+    margin-right:4px;
+  }
+  .l-d{font-size:10px;color:var(--muted);line-height:1.4}
+
+  /* middle col — file table */
+  .files{display:flex;flex-direction:column}
+  .frow{
+    display:grid;
+    grid-template-columns:165px 1fr 64px;
+    gap:10px;
+    padding:5px 0;
+    border-bottom:1px dotted rgba(26,23,20,0.22);
+    align-items:baseline;
+  }
+  .frow:last-child{border-bottom:none}
+  .frow .fn{
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:500;
+  }
+  .frow .fn .ext{color:var(--muted);font-weight:400}
+  .frow .fd{
+    font-size:10.5px;
+    line-height:1.4;
+    color:var(--ink);
+  }
+  .frow .fd em{
+    color:var(--accent);
+    font-style:italic;
+    font-family:var(--serif);
+    font-size:11.5px;
+  }
+  .frow .fp{
+    font-size:8.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    text-align:right;
+    white-space:nowrap;
+  }
+
+  /* right col — principles + dep map */
+  .pris{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+  .pri{
+    border-top:1px solid rgba(26,23,20,0.25);
+    padding-top:6px;
+  }
+  .pri:first-child{border-top:none;padding-top:0}
+  .pri .pn{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:10px;
+    color:var(--accent);
+    margin-bottom:1px;
+  }
+  .pri .ph{
+    font-family:var(--serif);
+    font-size:15px;
+    line-height:1.15;
+    margin-bottom:3px;
+  }
+  .pri .pb{font-size:10px;color:var(--muted);line-height:1.4}
+
+  .deps{
+    background:var(--paper-2);
+    padding:10px 12px;
+    border-left:2px solid var(--accent);
+  }
+  .dep-h{
+    font-size:8.5px;
+    font-weight:600;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:6px;
+  }
+  .dep-row{
+    display:grid;
+    grid-template-columns:54px 1fr;
+    gap:8px;
+    padding:3px 0;
+    font-size:10px;
+    line-height:1.4;
+    border-bottom:1px dotted rgba(26,23,20,0.18);
+  }
+  .dep-row:last-child{border-bottom:none}
+  .dep-p{
+    font-family:var(--mono);
+    color:var(--accent);
+    font-weight:500;
+    font-size:9.5px;
+  }
+  .dep-f{
+    font-family:var(--mono);
+    font-size:9.5px;
+  }
+  .dep-f .ar{color:var(--muted);margin:0 3px}
+
+  /* footer */
+  .foot{
+    border-top:1px solid var(--ink);
+    padding-top:8px;
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    font-size:9px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .foot .mk{
+    text-align:center;
+    font-family:var(--serif);
+    font-size:14px;
+    color:var(--accent);
+    letter-spacing:0;
+  }
+  .foot .r{text-align:right}
+
+  @media (max-height: 760px){
+    h1.title{font-size:30px}
+    .step{min-height:64px}
+    .step .n{font-size:15px}
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="mast">
+    <div>
+      <div class="eyebrow">Skill Architecture · Internal Reference</div>
+      <h1 class="title">qima-prd-<em>agent</em></h1>
+    </div>
+    <div class="lede">
+      A PRD orchestration skill. <b>SKILL.md is the brain, references are the rulebooks, templates are the skeleton, scripts are the external tooling.</b> Turns scattered context into a Confluence draft.
+    </div>
+    <div class="meta">
+      <div>MMXXVI · 04 · 27</div>
+      <div>v 0.1 · 9 files · 1.7k LOC</div>
+      <div>Lyon · QIMA PM</div>
+    </div>
+  </header>
+
+  <!-- workflow strip -->
+  <section>
+    <div class="flow">
+      <div class="step"><div class="n">0</div><div class="t">Intake</div><div class="d">Brief / assets / Figma / stakeholders</div></div>
+      <div class="step"><div class="n">0.5</div><div class="t">Keyword</div><div class="d">Expand seed terms into variant map</div></div>
+      <div class="step"><div class="n">1</div><div class="t">Source scan</div><div class="d">8 Subagents in parallel</div></div>
+      <div class="step"><div class="n">2</div><div class="t">Synthesis</div><div class="d">Facts / conflicts / gaps / assumptions</div></div>
+      <div class="step gate"><div class="n">A</div><div class="t">Checkpoint</div><div class="d">Multi-turn clarification, 1 Q / card</div><div class="gl">◆ User</div></div>
+      <div class="step"><div class="n">3</div><div class="t">Outline</div><div class="d">Skeleton + one-line intent</div></div>
+      <div class="step gate"><div class="n">B</div><div class="t">Checkpoint</div><div class="d">Outline approval</div><div class="gl">◆ User</div></div>
+      <div class="step"><div class="n">4</div><div class="t">Draft body</div><div class="d">Section-by-section + Figma embed</div></div>
+      <div class="step loop"><div class="n">4.5</div><div class="t">Depth-pass</div><div class="d">6-dim gate × per FR × max 3 rounds</div></div>
+      <div class="step loop"><div class="n">4.7</div><div class="t">Review-loop</div><div class="d">prd-critique · ask user on missing pattern</div></div>
+      <div class="step"><div class="n">5</div><div class="t">Write Conf</div><div class="d">Draft status + source ledger</div></div>
+    </div>
+  </section>
+
+  <!-- main 3-col body -->
+  <section class="body">
+
+    <!-- LEFT: tree + layers -->
+    <div class="col">
+      <div class="sec-h"><span class="num">§ I</span><span>File Structure</span><span class="sub">9 files</span></div>
+
+      <div class="tree">
+write-prd/
+├── <span class="pin">SKILL.md</span>                     <span class="anno">orchestrator</span>
+├── references/
+│   ├── source-checklist.md       <span class="anno">8 source specs</span>
+│   ├── keyword-expansion.md      <span class="anno">naming variants</span>
+│   ├── voice-and-register.md     <span class="anno">banned vocabulary</span>
+│   ├── depth-gate-checklist.md   <span class="anno">6-dim per-FR gate</span>
+│   ├── prd-patterns-from-best.md <span class="anno">5 best-PRD patterns</span>
+│   └── figma-handling.md         <span class="anno">image pipeline</span>
+├── templates/
+│   └── prd-template.md           <span class="anno">11-section skeleton</span>
+└── scripts/
+    └── fetch-figma.sh            <span class="anno">batch PNG download</span>
+      </div>
+
+      <div class="sec-h" style="margin-top:6px"><span class="num">§ II</span><span>Three Layers</span></div>
+      <div class="layers">
+        <div class="layer">
+          <div class="l-h"><span class="roman">i</span>Orchestration</div>
+          <div class="l-d">SKILL.md — 8 phases · 2 checkpoints · 2 auto-loops. Swap a rule without touching the main flow.</div>
+        </div>
+        <div class="layer">
+          <div class="l-h"><span class="roman">ii</span>References</div>
+          <div class="l-d">6 rulebooks. SKILL pulls them in at specific phases; the PM never reads them directly.</div>
+        </div>
+        <div class="layer">
+          <div class="l-h"><span class="roman">iii</span>Templates &amp; Tools</div>
+          <div class="l-d">Template = skeleton (not content); fetch-figma.sh = batch PNG, ~10× faster than the MCP loop.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIDDLE: file index -->
+    <div class="col">
+      <div class="sec-h"><span class="num">§ III</span><span>What Each File Does</span><span class="sub">phase tag = when it&rsquo;s read</span></div>
+      <div class="files">
+        <div class="frow">
+          <div class="fn">SKILL.<span class="ext">md</span></div>
+          <div class="fd">Workflow, decision rules, safety gates, never list. <em>Single entry point</em>.</div>
+          <div class="fp">Entry</div>
+        </div>
+        <div class="frow">
+          <div class="fn">keyword-expansion</div>
+          <div class="fd">QIMA naming is messy (code / product / module / Jira label). Seed-term expansion algorithm.</div>
+          <div class="fp">Phase 0.5</div>
+        </div>
+        <div class="frow">
+          <div class="fn">source-checklist</div>
+          <div class="fd">Spec for the 8 parallel Phase-1 scanners — Outlook / Teams / Conf / Figma / QSP / local. <em>Required reading before each Subagent runs</em>.</div>
+          <div class="fp">Phase 1</div>
+        </div>
+        <div class="frow">
+          <div class="fn">prd-template</div>
+          <div class="fd">QIMA official 11-section skeleton (Conf 4381212673). Phase 4 fills it section by section.</div>
+          <div class="fp">Phase 3 · 4</div>
+        </div>
+        <div class="frow">
+          <div class="fn">figma-handling</div>
+          <div class="fd">Two paths: Chrome MCP auto-upload (default) / manual drag-in fallback.</div>
+          <div class="fp">Phase 4</div>
+        </div>
+        <div class="frow">
+          <div class="fn">fetch-figma.<span class="ext">sh</span></div>
+          <div class="fd">Batch PNG download via Figma REST. Token at ~/.config/figma-token.</div>
+          <div class="fp">Phase 4</div>
+        </div>
+        <div class="frow">
+          <div class="fn">voice-and-register</div>
+          <div class="fd">Banned vocabulary in PRD prose (microservice / repo / Jira ID / Lambda names). <em>Hard-rule check during review</em>.</div>
+          <div class="fp">Phase 4 · 4.7</div>
+        </div>
+        <div class="frow">
+          <div class="fn">depth-gate-checklist</div>
+          <div class="fd">6-dim per-FR gate — states / interaction / fields / boundaries / deps+API / scope. <em>Includes field-mapping table + G/W/T templates</em>.</div>
+          <div class="fp">Phase 4.5</div>
+        </div>
+        <div class="frow">
+          <div class="fn">prd-patterns-from-best</div>
+          <div class="fd">5 patterns distilled from top QIMA PRDs — state machines · scenario matrix · cross-system field table · OOS reopen triggers · decision log. <em>Missing patterns prompt the user</em>.</div>
+          <div class="fp">Phase 4 · 4.5 · 4.7</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: principles + dep map -->
+    <div class="col">
+      <div class="sec-h"><span class="num">§ IV</span><span>Design Principles</span></div>
+      <div class="pris">
+        <div class="pri">
+          <div class="pn">i.</div>
+          <div class="ph">Never fabricate</div>
+          <div class="pb">Every claim must trace back to a source or be explicitly marked &ldquo;assumption — needs user confirmation&rdquo;. Short and true beats long and invented.</div>
+        </div>
+        <div class="pri">
+          <div class="pn">ii.</div>
+          <div class="ph">Orchestration vs rules</div>
+          <div class="pb">SKILL only decides &ldquo;when to call what&rdquo;; rule details live in references. Swap a rule without touching the main flow.</div>
+        </div>
+        <div class="pri">
+          <div class="pn">iii.</div>
+          <div class="ph">No silent in-fill</div>
+          <div class="pb">Depth-gate ceiling &rarr; Open Questions; missing pattern &rarr; AskUserQuestion. The skill never makes product judgment calls for the PM.</div>
+        </div>
+      </div>
+
+      <div class="deps">
+        <div class="dep-h">Phase × File usage</div>
+        <div class="dep-row"><span class="dep-p">0.5</span><span class="dep-f">SKILL <span class="ar">→</span> keyword-expansion</span></div>
+        <div class="dep-row"><span class="dep-p">1</span><span class="dep-f">SKILL <span class="ar">→</span> source-checklist <span class="ar">→</span> 8 Subagents</span></div>
+        <div class="dep-row"><span class="dep-p">3 · 4</span><span class="dep-f">SKILL <span class="ar">→</span> prd-template</span></div>
+        <div class="dep-row"><span class="dep-p">4</span><span class="dep-f">figma-handling, fetch-figma, voice, patterns</span></div>
+        <div class="dep-row"><span class="dep-p">4.5</span><span class="dep-f">depth-gate <span class="ar">→</span> patterns</span></div>
+        <div class="dep-row"><span class="dep-p">4.7</span><span class="dep-f">prd-critique <span class="ar">→</span> voice, patterns</span></div>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="foot">
+    <div>qima-pm-skills · write-prd · skill architecture</div>
+    <div class="mk">❦</div>
+    <div class="r">internal reference · Lyon</div>
+  </footer>
+
+</main>
+</body>
+</html>

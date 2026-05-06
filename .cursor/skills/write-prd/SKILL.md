@@ -1,0 +1,256 @@
+---
+name: write-prd
+description: Orchestrate end-to-end PRD drafting for QIMA PMs. Aggregates context from local files (PPT/PDF/transcripts), Outlook, Teams, SharePoint/OneDrive, Confluence history, Figma, Notion, and QSP code repos; runs short business-background mining + multi-turn depth interview with the user; enforces a PM-readable, non-technical voice with a strict length cap; then writes a complete PRD draft to a specified Confluence page. Use when a PM says "write a PRD", "draft a PRD", "create a requirements document", "run the PRD skill", or invokes /write-prd. Do NOT use for reviewing existing PRDs (use prd-critique) or breaking PRDs into tickets (use ticket-breakdown).
+version: 0.3.0
+user-invocable: true
+argument-hint: "[feature name or brief description]"
+---
+
+# QIMA PM Skills
+
+End-to-end orchestrator that turns scattered context into a Confluence PRD draft. The PM owns the thinking; this skill owns the legwork.
+
+## Core principles
+
+**Never fabricate.** Every claim must be traceable to a cited source or marked as "assumption — needs user confirmation".
+
+**Ask thoroughly, write tightly.** Long interview → short PRD. **These are two different budgets — do not conflate them.** Phase 1.5 / 2.5 / Checkpoint A SHOULD ask many questions; Phase 4 drafting SHOULD compress aggressively. The user's time spent answering = quality saved later.
+
+When deciding whether to ask a question, default to **ASK**. Three triggers fire a question:
+
+1. **You're uncertain about a fact** (source ambiguous, two sources conflict, or no source at all)
+2. **You find a detail meaningful** (a number, a constraint, a stakeholder name, a trade-off the PM is making implicitly) — flag it back to the PM so they can confirm or correct, even if it doesn't block drafting
+3. **A section couldn't be drafted today without inventing** — that section's missing inputs are questions, not assumptions
+
+If unsure whether to ask, ASK. Verbose interview is recoverable; PRD with fabricated detail is not.
+
+**PM voice, not engineer voice.** PRDs are read by PMs, designers, business leads, and customer reps — not engineers. Technical detail belongs in the Tech Design page (linked from §1 meta-table), not in the PRD body. See `references/voice-and-register.md` — it is **enforced before publish**.
+
+**Short by default.** Target the body to **≤ 250 lines / ≤ 6 pages of Confluence**. If the PM wants engineering-grade depth, run `ticket-breakdown` afterwards — do not bloat the PRD itself.
+
+---
+
+## Mandatory preparation
+
+Before any work, confirm you have:
+
+1. **Feature scope** — one-sentence description of what's being built
+2. **Target Confluence location** — Space key + parent page URL (ask user if not given)
+3. **Template** — default to `qima-prd-writing-guide`; confirm if user wants otherwise
+4. **North Star / objective** — the business goal this PRD serves
+
+If any of these four are missing, ASK the user first. Do not guess.
+
+---
+
+## Workflow — 7 phases, 2 checkpoints, 1 auto-loop
+
+### Phase 0 · Input intake
+
+Collect from the user (explicit or via the elicitation form):
+
+- Background text or filled-in brief
+- Local asset paths (PPTs, PDFs, meeting transcripts, screenshots, prototype URLs)
+- **Figma section URL (REQUIRED if any §6 Design content is expected)** — the **specific section** containing the page-level frames (NOT the file root). Example: `https://www.figma.com/design/<KEY>/<NAME>?node-id=10428-25076`. Phase 4 will scope frame search to this section only — never search the whole file globally (that mis-resolves to unrelated pages: e.g., Marketing dashboards, MAISA AI panels, etc.). If user hasn't picked a section yet, ASK before drafting §6.
+- Known stakeholders (PM peers, engineering lead, design lead)
+- Known related Jira epics or Confluence pages (as seeds)
+- Target Confluence Space + parent page
+- Deadline / urgency (affects depth of source scan)
+
+Output: `context-manifest.md` listing every input source — Figma section URL recorded in its own row.
+
+### Phase 0.5 · Keyword expansion
+
+QIMA features have **inconsistent naming**. Build a small keyword map (at least 2 English variants, at least 1 localized or legacy variant, code names if known) before scanning. See `references/keyword-expansion.md`.
+
+Stop condition: ≥ 3 variant names found OR user confirms "these are all the names". Don't loop.
+
+### Phase 1 · Parallel source scan
+
+Dispatch all scanners in a single message (parallel Subagents). Every scanner uses the keyword map.
+
+| Scanner | Tool | What to extract |
+|---|---|---|
+| Outlook | `outlook_email_search` | Emails, past 90 days |
+| Teams | `chat_message_search` | Channels/DMs, decisions, asks |
+| SharePoint | `sharepoint_search` | Related docs |
+| Confluence | `searchConfluenceUsingCql` | Prior PRDs, retros, research |
+| Figma | `get_design_context` + `get_screenshot` | Designs |
+| QSP code / architecture | `codebase-understanding` skill (separate command — see below) | (only if PM asks for technical context — most PRDs don't need this) |
+| Notion | `notion-search` + `notion-fetch` | Linked Notion docs |
+| Local files | `Read` | PPT/PDF/transcript |
+
+Each Subagent returns a **structured brief (≤ 250 words)** with: key findings, direct quotes, source links.
+
+**Code base understanding is now a separate opt-in skill** — when the PRD subject is technically novel or cross-system (touches multiple platforms / new service), invoke `/codebase-understanding [feature]` either *before* drafting (for the PM to read) or as part of Phase 1 (and link the resulting brief from the related-materials row in PRD Section 1). The brief is NOT pasted into the PRD body — voice rules forbid that. Default = SKIP unless PM asks.
+
+### Phase 1.5 · Business-background mining
+
+Generate **6–15 meta-questions** about the domain concepts the PRD touches. For each: try to answer from sources first (1-sentence direct answer + cited source + ≤ 50 words mechanism). **Unanswered questions go to Phase 2.5 user batch — don't fabricate them.**
+
+The bar is *lift the PRD above template-completeness*. Each meta-question should be one a sharp engineer or new PM would ask. Don't pad — but don't under-ask either; a missing meta-question becomes a fabricated paragraph in §2.
+
+Output `business-background.md`. **Do NOT paste Q&A blocks into PRD body.** This file is fuel for §2 Background prose, not a section in the PRD itself.
+
+See `references/business-background-mining.md`.
+
+### Phase 2 · Synthesis & gap detection
+
+Merge briefs. Produce: confirmed facts, conflicts, gaps, assumptions. Do NOT write PRD content yet.
+
+### ◆ Checkpoint A · Multi-turn clarification
+
+Use `AskUserQuestion`. Prioritize, but cover ALL relevant items — under-asking here is the #1 PRD-quality killer:
+
+1. **Conflicts between sources** — every conflict that affects an FR / metric / scope decision (user must pick)
+2. **Critical gaps** — every section that cannot be left blank without inventing (e.g., success metric numbers, owners, dates)
+3. **Scope boundaries** — every "is X in or out?" the sources don't decide
+4. **Implicit trade-offs** — when the PM has an implicit preference but no source mentions it (e.g., "you said keep 5-star landing — confirm this overrides the Ornella deletion email?")
+5. **Stakeholder identities** — every name mentioned without a §3 row entry should be confirmed (who is this, what role, do they belong in §3?)
+6. **Numbers without sources** — any quantitative claim (≥ 60%, ≥ 40%, 32 MD, 6,621 sessions) needs a source citation; if missing, ask
+
+Per card: no more than 3 questions, single topic per card. Multi-card rounds are normal. Cap at **5 rounds**. Unresolved at round 5 -> "Open question" in Section 11 and move on.
+
+If a question feels minor but you're truly uncertain, ASK ANYWAY — the cost of asking is small; the cost of fabricating a detail in the PRD is large.
+
+### Phase 2.5 · Depth interview
+
+The shallowness audit lives in `references/depth-interview.md` — **all 18 triggers active by default**, not just the priority five. Target one round per triggered section.
+
+The point is to lift the PRD above template-completeness, not to interrogate the PM — but err toward asking. If the synthesis says "section X is thin", that section gets a round. **Don't skip rounds to save user time** — the user's time saved here re-appears as PRD weakness.
+
+Round structure per `references/depth-interview.md`:
+- Round 0 — scope sanity (always run)
+- Then run rounds in priority order (Background → FR schema → OOS provenance → Risk probability → Release gates → Edge cases → OQ blockers → others)
+
+**Stop conditions**: All triggered sections cleared, OR **round 7 hit (cap)**, OR user says "stop asking, draft what you have" (in which case log what's missing as TBD markers).
+
+### Phase 3 · Outline generation
+
+Produce the PRD outline only — section headings + one-line intent. Surface to user as a structured list. Mark sections as Strong / from-source / "open question".
+
+### ◆ Checkpoint B · Outline approval
+
+User confirms outline or redirects.
+
+### Phase 4 · Draft body
+
+1. **Delegate to `qima-prd-writing-guide`** for section prose.
+2. **Length budget**: aim for ≤ 250 lines of markdown body, ≤ 6 Confluence pages. If you exceed, cut.
+3. **Voice gate (REQUIRED before publish)**: scan the draft for the banned items in `references/voice-and-register.md` — Jira ticket lists, repo names, route paths, service names, internal field paths, snake_case event details. Move any survivors to **Appendix · For engineering reference** or strip outright.
+4. **Figma deep-links + render**: every `## 6.x Page N` MUST carry:
+   - a `> **Figma frame**: [name](URL?node-id=<frame>)` line — text-link form
+   - **a bare Figma URL on its own line directly underneath** — Confluence's **Figma for Confluence** plugin (assumed installed in QIMA Confluence) auto-detects bare URLs and renders them as inline live frame embeds. Bare-URL-on-own-line is the simplest reliable trigger for the plugin macro.
+
+   **Frame-search scope**: search **ONLY inside the user-provided Figma section** (recorded in Section 1 related materials + Phase 0 intake). NEVER search the whole file globally — Figma files have many unrelated pages (marketing dashboards, AI workspaces, etc.) and global search picks the wrong frame. If the user hasn't supplied a section node-id, ASK before drafting Section 6.
+
+   If a node-id can't be resolved within the user-provided section, write `TBD — ask design lead` and add to Section 11 Open Questions; do NOT fall back to file root.
+
+   Optional: also include an `<!-- IMG:filename.png -->` marker for static-PNG fallback (Path B manual drop-in) — only if the team explicitly wants offline-readable screenshots in addition to live embeds. Default = skip the IMG marker; live Figma embed is enough.
+
+   See `references/figma-handling.md` for the section-scoping algorithm and the Figma for Confluence rendering rule.
+5. **Each section ends with** a short Source pointer (e.g. *"Source: Tech Design Confluence 4559699969"*) — not a full citation array.
+
+### Phase 4.5 · Depth-pass loop (OPTIONAL — only on explicit PM request)
+
+The 6-dimension per-FR depth gate (`references/depth-gate-checklist.md`) drives engineering-grade detail: state machines, field-mapping tables, API contracts, edge case matrices. **This produces a 500+ line "spec" — useful for solo dev handoff, but bloats the PRD.**
+
+Default = SKIP. Run only when:
+- PM explicitly asks: *"make this dev-ready"* / *"deep version"* / *"include the data contract"*, OR
+- There is no separate Tech Design page and dev is pulling from PRD directly.
+
+Otherwise, leave per-FR detail to `ticket-breakdown` (the dedicated handoff skill).
+
+### Phase 4.7 · Review-loop (REQUIRED)
+
+After body draft, invoke the `prd-critique` skill. Loop until no High items or 3rd round. Apply fixes between rounds.
+
+The reviewer's first pass also enforces `voice-and-register.md` — any technical-jargon survivor counts as a finding.
+
+### Phase 5 · Write to Confluence
+
+1. **Confirm target Space** with user (safety gate)
+2. Create page with `createConfluencePage` — status: **draft**
+3. Append:
+   - **Source ledger** (compact — 1 row per source, no per-claim citation fan-out)
+   - **Open questions** (any unresolved)
+4. Return URL + 3-bullet summary of what was written and what needs user attention.
+
+---
+
+## Decision rules
+
+### When to ask vs proceed
+
+ASK when: required field has no source · two sources contradict · scope unclear · target Confluence not specified.
+
+PROCEED (and flag) when: minor ambiguity in non-critical section · stylistic phrasing only.
+
+### When to use Subagent vs inline
+
+Subagent (parallel): Phase 1 source scanning · heavy code-repo reads · single read > 5k tokens.
+
+Inline: AskUserQuestion · PRD body writing · Confluence write.
+
+---
+
+## Safety gates
+
+1. **Confluence write** — confirm Space + parent; default Draft.
+2. **Figma upload via Chrome MCP** — verify Chrome MCP available + authenticated to `qima.atlassian.net` before uploading.
+3. **Jira creation** — NOT this skill's job (use `ticket-breakdown`).
+
+NEVER:
+- Write to a published Confluence page without explicit confirmation
+- Auto-generate Jira tickets
+- **Skip the voice-gate (Phase 4 step 3) or the review-loop (Phase 4.7)**
+- Improvise formatting — match `references/format-conventions.md`
+- Exceed the length budget without an explicit user request to go deep
+- Paste Phase 1.5 Q&A blocks into PRD body — they are working notes, not deliverable
+
+---
+
+## Inputs & outputs
+
+**Inputs**: feature brief · optional local assets / Figma URLs / Confluence-Jira seeds · target Confluence + North Star.
+
+**Outputs**:
+- Confluence draft page URL (primary)
+- Compact Source ledger
+- Open-questions list
+- Local `context-manifest.md`
+
+---
+
+## References
+
+- `templates/prd-template.md` — QIMA PRD template (draft version)
+- `references/voice-and-register.md` — **enforced** non-technical voice rules
+- `references/format-conventions.md` — section structure + style guardrails
+- `references/source-checklist.md` — Phase 1 source-type → MCP-tool mapping
+- `references/keyword-expansion.md` — Phase 0.5 patterns
+- `references/business-background-mining.md` — Phase 1.5 light Q&A guidance
+- `references/depth-interview.md` — Phase 2.5 5-trigger audit
+- `references/depth-gate-checklist.md` — **OPTIONAL** dev-handoff template
+- `references/prd-patterns-from-best.md` — patterns library; PMs pick what fits
+- `references/figma-handling.md` — Figma → Confluence image pipeline
+
+---
+
+## Related skills
+
+- `qima-prd-writing-guide` — Phase 4 prose
+- `prd-critique` — Phase 4.7 review (auto-invoked)
+- `codebase-understanding` — opt-in technical-context brief (architecture / repo / team map). Run as separate command when PRD needs it; brief is linked from the related-materials row in Section 1, never pasted in body
+- `ticket-breakdown` — AFTER PRD approval, produces engineering-grade ticket detail
+- `test-case-generation` — AFTER PRD approval, produces test cases
+
+---
+
+## Non-goals
+
+- This skill does NOT produce engineering-grade specs (use `ticket-breakdown`)
+- This skill does NOT review existing PRDs
+- This skill does NOT generate Jira tickets or test cases
+- This skill does NOT make product decisions — it surfaces information and asks the user
+- This skill does NOT write to production Confluence without confirmation

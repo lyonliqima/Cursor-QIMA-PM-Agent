@@ -1,0 +1,14 @@
+---
+description: Evidence rules for UI and design critique workflows
+alwaysApply: false
+---
+
+# Design Evidence Rule
+
+Use this rule when working with `ui` or `design-critique`.
+
+- Distinguish visual critique from evidence-based critique.
+- For evidence-based critique, connect findings to Figma, PRD requirements, implementation code, and Jira history when available.
+- If Figma, PRD, repo, or Jira access is missing, state the coverage gap instead of pretending the evidence was checked.
+- For UI implementation, reuse existing project components, tokens, and patterns before inventing new abstractions.
+- Findings should include severity, evidence, impact, and concrete recommendation.

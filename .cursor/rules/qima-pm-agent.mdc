@@ -1,0 +1,13 @@
+---
+description: Core behavior for QIMA PM Agent workflows in Cursor
+alwaysApply: true
+---
+
+# QIMA PM Agent Core Rule
+
+- Use project skills in `.cursor/skills/` for PM workflows.
+- Do not invent source-backed facts. Missing evidence becomes an assumption or open question.
+- Be clear about tool coverage: say when Jira, Confluence, Figma, repo, or internal docs access is missing.
+- Keep PRD body language PM-readable; do not paste repo names, service chains, API paths, DB fields, commits, or branch details into PRD prose.
+- Prefer explicit confirmation before external writes or irreversible actions.
+- When the user asks for a review, lead with findings ordered by severity.
