@@ -1,0 +1,33 @@
+{
+  "name": "qima-pm-agent-marketplace",
+  "metadata": {
+    "description": "Internal Cursor Team Marketplace for QIMA PM Agent workflows."
+  },
+  "owner": {
+    "name": "Lyon"
+  },
+  "plugins": [
+    {
+      "name": "qima-pm-agent",
+      "source": ".",
+      "description": "Cursor-ready QIMA PM Agent with PM workflow skills, persistent rules, and team-facing docs.",
+      "version": "1.0.0",
+      "repository": "https://github.com/lyonliqima/cursor-qima-pm-agent",
+      "author": {
+        "name": "Lyon"
+      },
+      "keywords": [
+        "qima",
+        "pm",
+        "prd",
+        "product-management",
+        "cursor",
+        "skills",
+        "jira",
+        "confluence",
+        "figma",
+        "design-review"
+      ]
+    }
+  ]
+}

@@ -4,11 +4,29 @@
 
 ## 推荐使用方式
 
+### 方式 A：Team Marketplace
+
+如果团队有 Cursor Team Marketplace 权限，推荐：
+
+1. 把这个项目推到 private GitHub repo。
+2. 团队管理员在 Cursor Dashboard 的 Team Marketplace / Plugins 区域导入该 repo。
+3. 团队成员从 Cursor Marketplace 安装，或由管理员设置为 required。
+
+这个 repo 已包含：
+
+```text
+.cursor-plugin/plugin.json
+.cursor-plugin/marketplace.json
+```
+
+### 方式 B：复制到团队项目仓库
+
 把以下文件复制到团队项目仓库根目录：
 
 ```text
 AGENTS.md
 .cursor/
+.cursor-plugin/
 docs/
 README.md
 ```

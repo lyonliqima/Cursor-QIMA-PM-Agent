@@ -1,0 +1,24 @@
+{
+  "name": "qima-pm-agent",
+  "version": "1.0.0",
+  "description": "Cursor-ready QIMA PM Agent with skills and rules for PRD drafting, codebase understanding, PRD critique, Jira ticket breakdown, UI work, and evidence-based design critique.",
+  "author": {
+    "name": "Lyon"
+  },
+  "repository": "https://github.com/lyonliqima/cursor-qima-pm-agent",
+  "license": "UNLICENSED",
+  "keywords": [
+    "qima",
+    "pm",
+    "prd",
+    "product-management",
+    "cursor",
+    "skills",
+    "jira",
+    "confluence",
+    "figma",
+    "design-review"
+  ],
+  "skills": ".cursor/skills/",
+  "rules": ".cursor/rules/"
+}

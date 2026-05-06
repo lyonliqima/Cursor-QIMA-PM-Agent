@@ -9,6 +9,9 @@
 ```text
 Cursor QIMA PM Agent/
 ├── AGENTS.md
+├── .cursor-plugin/
+│   ├── plugin.json
+│   └── marketplace.json
 ├── docs/
 │   ├── README.md
 │   ├── setup-guide.md
@@ -32,6 +35,7 @@ Cursor QIMA PM Agent/
 ## 为什么有隐藏目录和 docs
 
 - `.cursor/` 是给 Cursor 读取的隐藏目录，包含自动生效的 rules 和 skills。
+- `.cursor-plugin/` 是给 Cursor Plugin / Team Marketplace 读取的 manifest 元数据。
 - `docs/` 是给团队成员看的可见文档，方便在 Finder / GitHub 里浏览。
 
 如果 Finder 看不到 `.cursor/`，按 `Cmd + Shift + .` 显示隐藏文件。
@@ -55,6 +59,17 @@ Cursor QIMA PM Agent/
    - `Use ticket-breakdown to create a Jira plan from this PRD, dry run first.`
    - `Run design-critique with this Figma URL and PRD page.`
 4. 如果 Cursor 没有自动触发 skill，可以明确点名 skill 名称。
+
+## Team Marketplace 分发
+
+这个 repo 已包含 Cursor plugin metadata：
+
+```text
+.cursor-plugin/plugin.json
+.cursor-plugin/marketplace.json
+```
+
+如果团队有 Cursor Team Marketplace 权限，建议把这个 repo 设为 private，然后由团队管理员在 Cursor Dashboard 里导入这个 GitHub repo。团队成员之后可以从 Team Marketplace 安装，或由管理员设为 required。
 
 ## 必要依赖
 
