@@ -49,12 +49,15 @@ Use codebase-understanding to map the repos and teams for Interactive Report.
 
 ## 3. prd-critique
 
-用于评审已有 PRD。
+用于红队式评审已有 PRD，不只看文档本身，也会结合 codebase、Jira、Confluence 历史做证据核查。
 
 适合：
 
 - 检查 PRD 是否 ready for PM review
 - 检查 QIMA 模板、格式、voice/register
+- 对照现有代码行为、字段口径、状态流、权限和集成边界
+- 对照 Jira 历史 bug / reopened ticket / blocker
+- 对照 Confluence 里的旧 PRD、Tech Design、会议决策和 rollout 经验
 - 找 High / Medium / Low 问题
 
 示例：
@@ -66,6 +69,8 @@ Use prd-critique to review this Confluence PRD.
 输出：
 
 - High / Medium / Low findings
+- coverage & source ledger
+- evidence consistency check
 - missing sections
 - voice and format check
 - ready verdict

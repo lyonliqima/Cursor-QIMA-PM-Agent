@@ -44,7 +44,7 @@ Cursor QIMA PM Agent/
 
 - `write-prd`: 从分散上下文起草 Confluence PRD。
 - `codebase-understanding`: 梳理 feature 涉及的 repo、service、API、团队和文档。
-- `prd-critique`: 评审 PRD 是否满足 QIMA 模板、语气、完整性和可交付标准。
+- `prd-critique`: 红队式评审 PRD，结合 QIMA 模板、语气、codebase、Jira 和 Confluence 历史判断是否可交付。
 - `ticket-breakdown`: 在用户确认后，把 PRD 拆成 Jira Epic 和开发 tickets。
 - `ui`: 统一处理 UI 规划、实现、评审、审计、打磨、响应式、性能和文案。
 - `design-critique`: 基于 Figma、PRD、代码和 Jira 历史做证据型设计评审。
@@ -55,7 +55,7 @@ Cursor QIMA PM Agent/
 2. 把这个文件夹作为一个 Cursor workspace 打开，或把 `.cursor/`、`AGENTS.md`、`docs/` 复制进团队项目仓库。
 3. 在 Cursor Agent 里直接描述任务，例如：
    - `Use write-prd to draft a PRD for Supplier Confirmation.`
-   - `Run prd-critique on this Confluence PRD.`
+   - `Run prd-critique on this Confluence PRD with repo path and Jira context.`
    - `Use ticket-breakdown to create a Jira plan from this PRD, dry run first.`
    - `Run design-critique with this Figma URL and PRD page.`
 4. 如果 Cursor 没有自动触发 skill，可以明确点名 skill 名称。
