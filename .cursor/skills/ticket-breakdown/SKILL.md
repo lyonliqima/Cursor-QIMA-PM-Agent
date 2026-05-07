@@ -144,14 +144,40 @@ Create one Epic using `createJiraIssue`.
 Recommended Epic summary:
 
 ```text
-[ROVO] [Epic] - {PRD Feature Name}
+[ROVO] [Epic] - {Theme / Capability Name}
 ```
 
-Epic description should include:
+Epic description should use this format:
+
+```markdown
+**Epic User Story:**
+As a [type of user - who]
+I want [large business goal / capability - what]
+So that [business value - why]
+
+---
+
+**Business Objective:**
+[Why this Epic matters and what outcome it supports.]
+
+---
+
+**Scope Summary:**
+- [Capability / theme covered by this Epic]
+- [Important constraints or rollout boundaries]
+- [Out of scope, if relevant]
+
+---
+
+**Breakdown Guidance:**
+- Break this Epic into several independent User Stories that follow INVEST where possible.
+- Do not force full Given / When / Then acceptance criteria at Epic level. Capture only high-level success signals, constraints, and links.
+- User Stories under the same Epic may be delivered in different Sprints based on priority.
+```
+
+Epic description should also include:
 
 - PRD link
-- Business objective
-- Scope summary
 - Links to design, if available
 - Ticket breakdown strategy
 
@@ -232,14 +258,24 @@ Title: [ROVO] [Front-end / Back-end] - [Feature Name]
 ---
 
 **User Story:**
-As a [role], when I am on [page], I want to [action], so that I can [benefit].
+As a [type of user - who]
+I want [some goal / action - what]
+So that [some reason / business value - why]
+
+---
+
+**Additional Information:**
+- [Specific rule, constraint, data condition, permission, file type, size limit, or known assumption]
 
 ---
 
 **Acceptance Criteria:**
-1. The system should ...
-2. When ..., it should ...
-3. ...
+1. Given [a situation / precondition]
+   When [something happens / user action]
+   Then [expected result]
+2. Given [a boundary or exception situation]
+   When [something happens]
+   Then [expected result or error message]
 
 ---
 
@@ -253,17 +289,29 @@ As a [role], when I am on [page], I want to [action], so that I can [benefit].
 ### User Story Format
 
 ```
-As a [role], when I am on [page], I want to [action], so that I can [benefit].
+As a [type of user - who]
+I want [some goal - what]
+So that [some reason - why]
 ```
 
-An issue may contain **multiple User Stories**.
+User Stories must be clear enough to fit in one Sprint and should follow INVEST:
+
+- **Independent**
+- **Negotiable**
+- **Valuable**
+- **Estimable**
+- **Small**
+- **Testable**
+
+An issue may contain **multiple User Stories** only when they are tightly related and still small enough for one Sprint. Otherwise, split them into separate tickets.
 
 ### Acceptance Criteria Guidelines
 
 - Each item must clearly determine **Pass / Fail**
-- Include **normal flow** and at least one **boundary / exception** scenario
+- Use **Given / When / Then** for every scenario
+- Include the **main success flow** and at least one **boundary / exception** scenario when relevant
 - Use **specific values** — avoid vague descriptions
-- Each item should start with **"The system should..."** or **"When..., it should..."**
+- 2 to 4 acceptance criteria are usually enough for a User Story; QA can expand detailed test coverage separately
 
 ## Language Requirements
 
