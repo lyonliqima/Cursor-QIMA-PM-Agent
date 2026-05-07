@@ -1,7 +1,7 @@
 ---
 name: write-prd
-description: Orchestrate end-to-end PRD drafting for QIMA PMs. Aggregates context from local files (PPT/PDF/transcripts), Outlook, Teams, SharePoint/OneDrive, Confluence history, Figma, Notion, and QSP code repos; runs short business-background mining + multi-turn depth interview with the user; enforces a PM-readable, non-technical voice with a strict length cap; then writes a complete PRD draft to a specified Confluence page. Use when a PM says "write a PRD", "draft a PRD", "create a requirements document", "run the PRD skill", or invokes /write-prd. Do NOT use for reviewing existing PRDs (use prd-critique) or breaking PRDs into tickets (use ticket-breakdown).
-version: 0.3.0
+description: Orchestrate end-to-end PRD drafting for QIMA PMs. Before drafting, performs or refreshes local deep codebase and Confluence/Jira history reports for product features, then aggregates local files, Outlook, Teams, SharePoint/OneDrive, Confluence history, Figma, Notion, Jira, and QSP code context; runs business-background mining + multi-turn depth interview; enforces a PM-readable, non-technical PRD body; then writes a complete draft to Confluence. Use when a PM says "write a PRD", "draft a PRD", "create a requirements document", "run the PRD skill", or invokes /write-prd. Do NOT use for reviewing existing PRDs (use prd-critique) or breaking PRDs into tickets (use ticket-breakdown).
+version: 0.4.1
 user-invocable: true
 argument-hint: "[feature name or brief description]"
 ---
@@ -74,15 +74,88 @@ Dispatch all scanners in a single message (parallel Subagents). Every scanner us
 | Outlook | `outlook_email_search` | Emails, past 90 days |
 | Teams | `chat_message_search` | Channels/DMs, decisions, asks |
 | SharePoint | `sharepoint_search` | Related docs |
-| Confluence | `searchConfluenceUsingCql` | Prior PRDs, retros, research |
+| Confluence / Jira history | Phase 1.2 below | Deep history report across related Confluence pages and Jira issues |
 | Figma | `get_design_context` + `get_screenshot` | Designs |
-| QSP code / architecture | `codebase-understanding` skill (separate command — see below) | (only if PM asks for technical context — most PRDs don't need this) |
+| QSP code / architecture | `codebase-understanding` skill (Phase 1.1 below) | Deep codebase report, business fields, data flows, repo/service/API map |
 | Notion | `notion-search` + `notion-fetch` | Linked Notion docs |
 | Local files | `Read` | PPT/PDF/transcript |
 
 Each Subagent returns a **structured brief (≤ 250 words)** with: key findings, direct quotes, source links.
 
-**Code base understanding is now a separate opt-in skill** — when the PRD subject is technically novel or cross-system (touches multiple platforms / new service), invoke `/codebase-understanding [feature]` either *before* drafting (for the PM to read) or as part of Phase 1 (and link the resulting brief from the related-materials row in PRD Section 1). The brief is NOT pasted into the PRD body — voice rules forbid that. Default = SKIP unless PM asks.
+### Phase 1.1 · Deep codebase research report (REQUIRED for product/software PRDs)
+
+Before drafting any product/software PRD, run or refresh `codebase-understanding` for the feature. Default = RUN. Skip only when the PRD is explicitly non-software / non-system-facing and the PM confirms no codebase context is needed.
+
+**Freshness check first**:
+
+1. Search the working folder, user-provided docs folder, and Desktop for existing reports matching:
+   - `*codebase*{{feature-slug}}*.md`
+   - `*{{feature-slug}}*Codebase*.md`
+   - `*{{feature-slug}}*PRD_Ready*.md`
+2. Treat an existing report as stale if:
+   - it is older than 14 days, OR
+   - feature scope changed materially, OR
+   - new Jira / Confluence / Figma seeds were provided after the report was created, OR
+   - the PM says "重新研究", "深入看看代码", "refresh", "old", or similar.
+3. If no fresh report exists, run `codebase-understanding` in **deep PRD-prep mode**. Use a focused 5-minute scan budget for codebase discovery, then proceed with the best evidence found and mark remaining gaps.
+
+**Required local outputs**:
+
+- Full codebase report: `{work-folder}/_prd-run/codebase-reports/{feature-slug}-codebase-report-{YYYYMMDD}.md`
+- PRD-ready summary: `{work-folder}/_prd-run/codebase-reports/{feature-slug}-prd-ready-field-guide-{YYYYMMDD}.md`
+- If the user gave a Desktop / meeting-notes folder as source material, also copy or save the files there for easy access.
+
+**How to use the output**:
+
+- Link both local reports from PRD Section 1 related materials / source ledger.
+- Use the PRD-ready summary to shape Requirements and Acceptance Criteria.
+- Do NOT paste repo names, route paths, Java/TS field paths, or mapper details into the PRD body unless the user explicitly requests a dev-ready spec. Keep technical details in the local report or appendix.
+
+### Phase 1.2 · Confluence/Jira history research report (REQUIRED)
+
+Run this in parallel with Phase 1.1 and the other Phase 1 scanners. The goal is to understand the requirement's history, not just find the newest page.
+
+**Time budget**: about 5 minutes. When the budget is hit, stop deeper searching, summarize what was found, and mark gaps.
+
+**Search targets**:
+
+- Confluence PRDs, Tech Designs, design notes, rollout notes, retrospectives, meeting notes, research pages, and architecture pages.
+- Jira Epics, Stories, Bugs, Tasks, linked issues, recently updated tickets, and tickets referenced from Confluence pages.
+
+**Search strategy**:
+
+1. Use the Phase 0.5 keyword map plus Jira keys and page titles found during the scan.
+2. Search broadly first, then follow links from the strongest Confluence/Jira hits.
+3. Extract history, not just current scope:
+   - why the requirement exists;
+   - previous attempts / legacy decisions;
+   - known constraints and unresolved questions;
+   - scope changes over time;
+   - related bugs / support asks;
+   - stakeholders and owning teams mentioned in docs;
+   - old vs new terminology.
+4. Weighting is for prioritization only, not proof:
+   - recent content gets higher weight;
+   - directly linked PRD/Tech Design/Jira gets higher weight;
+   - older content still matters when it explains origin, constraints, or decisions that remain true.
+5. If sources conflict, record the conflict instead of choosing silently.
+
+**Required local output**:
+
+- History report: `{work-folder}/_prd-run/history-reports/{feature-slug}-confluence-jira-history-{YYYYMMDD}.md`
+- If the user gave a Desktop / meeting-notes folder as source material, also copy or save the file there for easy access.
+
+**Report must include**:
+
+- Executive summary of historical context.
+- Weighted source list with recency and relevance notes.
+- Timeline of major decisions / requirement changes.
+- Related Confluence pages.
+- Related Jira issues.
+- Confirmed facts, conflicts, gaps, and open questions.
+- PRD implications: what should influence Background, Scope, Requirements, Risks, Rollout, and Open Questions.
+
+See `references/requirement-history-research.md`.
 
 ### Phase 1.5 · Business-background mining
 
@@ -150,6 +223,18 @@ User confirms outline or redirects.
 
    See `references/figma-handling.md` for the section-scoping algorithm and the Figma for Confluence rendering rule.
 5. **Each section ends with** a short Source pointer (e.g. *"Source: Tech Design Confluence 4559699969"*) — not a full citation array.
+6. **Codebase-report use**: convert codebase findings into product language:
+   - code field -> business field
+   - mapper logic -> user-visible rule
+   - API/data-flow constraint -> dependency/risk
+   - evidence path -> acceptance criterion
+   Never paste raw implementation detail into the main PRD body.
+7. **History-report use**: convert Confluence/Jira history into PRD context:
+   - old decision -> background or scope rationale
+   - recent Jira/Confluence update -> current direction or risk
+   - conflict between sources -> open question
+   - repeated bug/support ask -> pain point or acceptance criterion
+   Never paste the full timeline into the PRD body; keep it in the local history report and cite the strongest sources.
 
 ### Phase 4.5 · Depth-pass loop (OPTIONAL — only on explicit PM request)
 
@@ -199,6 +284,8 @@ Inline: AskUserQuestion · PRD body writing · Confluence write.
 1. **Confluence write** — confirm Space + parent; default Draft.
 2. **Figma upload via Chrome MCP** — verify Chrome MCP available + authenticated to `qima.atlassian.net` before uploading.
 3. **Jira creation** — NOT this skill's job (use `ticket-breakdown`).
+4. **Codebase report freshness** — for product/software PRDs, do not draft without either a fresh local codebase report or an explicit PM confirmation to skip.
+5. **History report freshness** — do not draft without either a fresh Confluence/Jira history report or an explicit PM confirmation to skip.
 
 NEVER:
 - Write to a published Confluence page without explicit confirmation
@@ -207,6 +294,8 @@ NEVER:
 - Improvise formatting — match `references/format-conventions.md`
 - Exceed the length budget without an explicit user request to go deep
 - Paste Phase 1.5 Q&A blocks into PRD body — they are working notes, not deliverable
+- Treat stale codebase notes as current without checking age/scope
+- Treat the newest Confluence/Jira page as the only truth without checking linked historical context
 
 ---
 
@@ -219,6 +308,8 @@ NEVER:
 - Compact Source ledger
 - Open-questions list
 - Local `context-manifest.md`
+- Local deep codebase report + PRD-ready field guide for product/software PRDs
+- Local Confluence/Jira history report for requirement background and prior decisions
 
 ---
 
@@ -230,6 +321,7 @@ NEVER:
 - `references/source-checklist.md` — Phase 1 source-type → MCP-tool mapping
 - `references/keyword-expansion.md` — Phase 0.5 patterns
 - `references/business-background-mining.md` — Phase 1.5 light Q&A guidance
+- `references/requirement-history-research.md` — Phase 1.2 Confluence/Jira history report guidance
 - `references/depth-interview.md` — Phase 2.5 5-trigger audit
 - `references/depth-gate-checklist.md` — **OPTIONAL** dev-handoff template
 - `references/prd-patterns-from-best.md` — patterns library; PMs pick what fits
@@ -241,7 +333,7 @@ NEVER:
 
 - `qima-prd-writing-guide` — Phase 4 prose
 - `prd-critique` — Phase 4.7 review (auto-invoked)
-- `codebase-understanding` — opt-in technical-context brief (architecture / repo / team map). Run as separate command when PRD needs it; brief is linked from the related-materials row in Section 1, never pasted in body
+- `codebase-understanding` — required before product/software PRDs unless explicitly skipped; produces local deep codebase report + PRD-ready field guide; link from Section 1, never paste raw technical detail in body
 - `ticket-breakdown` — AFTER PRD approval, produces engineering-grade ticket detail
 - `test-case-generation` — AFTER PRD approval, produces test cases
 

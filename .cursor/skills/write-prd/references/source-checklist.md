@@ -126,11 +126,13 @@ Phase 1 of the write-prd dispatches 8 parallel Subagents, one per source type. E
 
 ---
 
-## Scanner 4 · Confluence history
+## Scanner 4 · Confluence/Jira history
 
-**Why it matters**: prior PRDs (revisions / predecessors), research docs, retrospective findings, decision logs.
+**Why it matters**: prior PRDs, Tech Designs, Jira Epics/Stories/Bugs, research docs, retrospective findings, decision logs, and historical scope changes.
 
-**Primary tool**: `mcp__0a80a26e-...-searchConfluenceUsingCql`
+**Primary tools**:
+- `searchConfluenceUsingCql` for Confluence pages
+- Jira search / issue read tools for Epics, Stories, Bugs, Tasks, linked issues, and recently updated tickets
 
 **Query strategy**:
 
@@ -142,21 +144,32 @@ text ~ "<canonical>" OR text ~ "<variant_1>" OR text ~ "<variant_2>"
   ORDER BY lastmodified DESC
 ```
 
-Then a second query without the time filter for **anchor docs** (previous PRDs, strategy pages) — retrieval quality matters more than recency here.
+Then:
+
+1. Run a second Confluence query without the time filter for **anchor docs** (previous PRDs, strategy pages) — retrieval quality matters more than recency here.
+2. Search Jira using the same keyword map plus page titles and Jira keys discovered from Confluence.
+3. Follow links both ways: Confluence pages → Jira keys, Jira issues → Confluence/spec links.
+4. Spend about 5 minutes total; stop and summarize rather than chasing every link.
 
 **What to extract**:
-- **Previous PRD for the same / adjacent feature** — flag as HIGH priority for the agent to read
+- **Previous PRD / Tech Design for the same or adjacent feature** — flag as HIGH priority for the agent to read
+- **Jira history** — Epics, Stories, Bugs, linked issues, recent updates, and unresolved tickets
 - **Research findings** — competitive, user interviews, data analysis
 - **Retrospective action items** relevant to this area
 - **Architecture / decision records**
+- **Timeline** — when scope or decisions changed
+- **Conflicts** — old vs new terminology, old scope vs recent scope, Jira vs Confluence mismatch
+- **PRD implications** — what should affect Background, Scope, Requirements, Risks, Rollout, or Open Questions
 
 **Skip**:
 - Personal spaces (space keys starting with `~`)
 - "Copy of …" pages older than 6 months
+- Similar-keyword Jira issues with no clear relation after summary/link review
 
 **Failure modes**:
 - *Too many matches across all spaces*: filter to owning-team space only first
 - *CQL error on special characters*: escape or simplify
+- *Too many Jira matches*: prefer recently updated Epics/Stories and issues linked from strong Confluence hits
 
 ---
 
