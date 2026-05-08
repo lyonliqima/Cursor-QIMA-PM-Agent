@@ -221,6 +221,8 @@ User confirms outline or redirects.
 
    Optional: also include an `<!-- IMG:filename.png -->` marker for static-PNG fallback (Path B manual drop-in) — only if the team explicitly wants offline-readable screenshots in addition to live embeds. Default = skip the IMG marker; live Figma embed is enough.
 
+   **Static design assets / cropped screenshots**: when the user asks for images in the PRD, when Confluence needs URL-hosted screenshots, or when a long Figma page must be split into PRD-section-specific crops, load the internal `prd-design-assets` skill. Use it to export via Figma API, crop focused regions, publish stable image URLs, and insert the cropped screenshots next to the matching Design subsection. Do not insert one long screenshot when section-level crops are available.
+
    See `references/figma-handling.md` for the section-scoping algorithm and the Figma for Confluence rendering rule.
 5. **Each section ends with** a short Source pointer (e.g. *"Source: Tech Design Confluence 4559699969"*) — not a full citation array.
 6. **Codebase-report use**: convert codebase findings into product language:
@@ -334,6 +336,7 @@ NEVER:
 - `qima-prd-writing-guide` — Phase 4 prose
 - `prd-critique` — Phase 4.7 review (auto-invoked)
 - `codebase-understanding` — required before product/software PRDs unless explicitly skipped; produces local deep codebase report + PRD-ready field guide; link from Section 1, never paste raw technical detail in body
+- `prd-design-assets` — internal helper for static Figma exports, cropped PRD-section images, and URL-hosted screenshots; use only from this skill or `ticket-breakdown`
 - `ticket-breakdown` — AFTER PRD approval, produces engineering-grade ticket detail
 - `test-case-generation` — AFTER PRD approval, produces test cases
 

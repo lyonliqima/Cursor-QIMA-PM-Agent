@@ -102,6 +102,7 @@ The plan must include:
 - Every ticket summary, issue type, source FR / section, dependencies, and whether it is Front-end, Back-end, API/Contract, or QA/Test
 - The intended Epic association method discovered from metadata, if already known
 - The PRD update section that will be appended or replaced after Jira creation
+- Whether any design areas should be mapped to ticket-specific screenshots. If static design images are needed, load the internal `prd-design-assets` skill after Jira creation so each crop can be named with the final ticket key.
 
 If `$DRY_RUN` is true, stop here and return the plan.
 
@@ -239,6 +240,19 @@ Recommended section:
 ```
 
 For Confluence updates, preserve the existing page title, parent, and space. Use `versionMessage`: `Add development ticket links from PRD breakdown`.
+
+### Step 6.5 — Add ticket-specific design assets when needed
+
+If the PRD has a Figma design link and the user asks for images, cropped screenshots, or design references per ticket, load the internal `prd-design-assets` skill.
+
+Use it to:
+
+- Export the relevant Figma section or frame through the Figma API.
+- Crop the design into focused regions mapped to the created Jira keys.
+- Publish the cropped images to the configured asset URL.
+- Insert the cropped image under the matching PRD Design subsection or into each Jira ticket's `Design` / `Additional Information` field when appropriate.
+
+Do not use one full-length screenshot for multiple tickets if focused crops can be produced. Each image should explain the specific UI area owned by that ticket.
 
 ### Step 7 — Return final summary
 
