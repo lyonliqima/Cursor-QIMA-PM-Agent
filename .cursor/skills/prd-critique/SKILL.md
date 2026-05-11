@@ -1,7 +1,7 @@
 ---
 name: prd-critique
 description: Red-team, senior PMO/CPO-level PRD critique skill for QIMA PRDs. Use after write-prd produces a full draft, or whenever the user asks to review, critique, evaluate, challenge, stress-test, or validate an existing PRD. Reads a local PRD or Confluence URL end-to-end, cross-checks codebase facts, Jira history, and Confluence decisions when available, applies QIMA-specific and best-practice PRD review dimensions, and returns evidence-backed High/Medium/Low findings. Runs read-only and never edits the PRD itself.
-version: 1.1.0
+version: 1.1.1
 user-invocable: true
 argument-hint: "<prd-file-or-confluence-url> [feature/module] [repo-path] [context]"
 ---
@@ -71,6 +71,17 @@ PRD prose must not contain:
 - Lambda / function / component internal names, such as `V2ResultBlock`, `report-mapper Lambda`
 
 Reference: `${CLAUDE_PLUGIN_ROOT}/skills/write-prd/references/voice-and-register.md`. If the environment variable is unavailable, locate the file with a glob search.
+
+Also enforce `${CLAUDE_PLUGIN_ROOT}/skills/write-prd/references/human-prd-writing-style.md` as a hard gate. If the environment variable is unavailable, locate the file with a glob search.
+
+Flag as Medium or High:
+
+- generic benefit claims such as "improve efficiency" or "enhance user experience" with no specific workflow, role, baseline, or business impact;
+- AI-smell words such as "seamless", "robust", "user-friendly", "optimized", "streamlined", "leverage", "empower";
+- Background that does not explain current situation, pain point, impact, baseline/source gap, and why now;
+- Scope without rationale for in-scope / out-of-scope decisions;
+- Metrics without baseline, target, measurement method, owner, and review timing;
+- Open Questions without owner, alignment party, v1 blocking flag, or consequence.
 
 ### 2. Official 11-section template and format conformance
 
@@ -265,6 +276,10 @@ Return exactly this structure:
 
 ### Voice & Register Check
 - Pass / Fail per rule, with specific line numbers if violations
+
+### Human PM Writing Check
+- Pass / Fail against `human-prd-writing-style.md`
+- List AI-smell paragraphs and the concrete rewrite direction
 
 ### Format Conformance
 - Checklist item: pass / fail / n/a

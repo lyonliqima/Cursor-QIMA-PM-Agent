@@ -1,7 +1,7 @@
 ---
 name: write-prd
 description: Orchestrate end-to-end PRD drafting for QIMA PMs. Before drafting, performs or refreshes local deep codebase and Confluence/Jira history reports for product features, then aggregates local files, Outlook, Teams, SharePoint/OneDrive, Confluence history, Figma, Notion, Jira, and QSP code context; runs business-background mining + multi-turn depth interview; enforces a PM-readable, non-technical PRD body; then writes a complete draft to Confluence. Use when a PM says "write a PRD", "draft a PRD", "create a requirements document", "run the PRD skill", or invokes /write-prd. Do NOT use for reviewing existing PRDs (use prd-critique) or breaking PRDs into tickets (use ticket-breakdown).
-version: 0.4.1
+version: 0.4.2
 user-invocable: true
 argument-hint: "[feature name or brief description]"
 ---
@@ -25,6 +25,8 @@ When deciding whether to ask a question, default to **ASK**. Three triggers fire
 If unsure whether to ask, ASK. Verbose interview is recoverable; PRD with fabricated detail is not.
 
 **PM voice, not engineer voice.** PRDs are read by PMs, designers, business leads, and customer reps — not engineers. Technical detail belongs in the Tech Design page (linked from §1 meta-table), not in the PRD body. See `references/voice-and-register.md` — it is **enforced before publish**.
+
+**Human PM writing, not AI summary.** The PRD should read like a QIMA PM wrote it after stakeholder alignment: concrete situation, named owner, explicit scope decision, measurable outcome, and a few useful imperfections of natural business writing. If a paragraph could fit any company or any product, rewrite it or delete it. See `references/human-prd-writing-style.md` — it is **enforced before publish**.
 
 **Short by default.** Target the body to **≤ 250 lines / ≤ 6 pages of Confluence**. If the PM wants engineering-grade depth, run `ticket-breakdown` afterwards — do not bloat the PRD itself.
 
@@ -210,8 +212,9 @@ User confirms outline or redirects.
 
 1. **Delegate to `qima-prd-writing-guide`** for section prose.
 2. **Length budget**: aim for ≤ 250 lines of markdown body, ≤ 6 Confluence pages. If you exceed, cut.
-3. **Voice gate (REQUIRED before publish)**: scan the draft for the banned items in `references/voice-and-register.md` — Jira ticket lists, repo names, route paths, service names, internal field paths, snake_case event details. Move any survivors to **Appendix · For engineering reference** or strip outright.
-4. **Figma deep-links + render**: every `## 6.x Page N` MUST carry:
+3. **Human PM style gate (REQUIRED before publish)**: scan the draft against `references/human-prd-writing-style.md`. Remove AI-smell language, generic benefit claims, symmetrical filler, and unsupported confidence. Make Background, Scope, Metrics, Rollout, and Open Questions decision-quality before publishing.
+4. **Voice gate (REQUIRED before publish)**: scan the draft for the banned items in `references/voice-and-register.md` — Jira ticket lists, repo names, route paths, service names, internal field paths, snake_case event details. Move any survivors to **Appendix · For engineering reference** or strip outright.
+5. **Figma deep-links + render**: every `## 6.x Page N` MUST carry:
    - a `> **Figma frame**: [name](URL?node-id=<frame>)` line — text-link form
    - **a bare Figma URL on its own line directly underneath** — Confluence's **Figma for Confluence** plugin (assumed installed in QIMA Confluence) auto-detects bare URLs and renders them as inline live frame embeds. Bare-URL-on-own-line is the simplest reliable trigger for the plugin macro.
 
@@ -224,19 +227,25 @@ User confirms outline or redirects.
    **Static design assets / cropped screenshots**: when the user asks for images in the PRD, when Confluence needs URL-hosted screenshots, or when a long Figma page must be split into PRD-section-specific crops, load the internal `prd-design-assets` skill. Use it to export via Figma API, crop focused regions, publish stable image URLs, and insert the cropped screenshots next to the matching Design subsection. Do not insert one long screenshot when section-level crops are available.
 
    See `references/figma-handling.md` for the section-scoping algorithm and the Figma for Confluence rendering rule.
-5. **Each section ends with** a short Source pointer (e.g. *"Source: Tech Design Confluence 4559699969"*) — not a full citation array.
-6. **Codebase-report use**: convert codebase findings into product language:
+6. **Each section ends with** a short Source pointer (e.g. *"Source: Tech Design Confluence 4559699969"*) — not a full citation array.
+7. **Codebase-report use**: convert codebase findings into product language:
    - code field -> business field
    - mapper logic -> user-visible rule
    - API/data-flow constraint -> dependency/risk
    - evidence path -> acceptance criterion
    Never paste raw implementation detail into the main PRD body.
-7. **History-report use**: convert Confluence/Jira history into PRD context:
+8. **History-report use**: convert Confluence/Jira history into PRD context:
    - old decision -> background or scope rationale
    - recent Jira/Confluence update -> current direction or risk
    - conflict between sources -> open question
    - repeated bug/support ask -> pain point or acceptance criterion
    Never paste the full timeline into the PRD body; keep it in the local history report and cite the strongest sources.
+9. **Decision-quality pass**: before review, verify the draft contains:
+   - Background: current situation, pain point, business impact, and baseline if available.
+   - Scope: in-scope / out-of-scope decisions with reasons, not just a feature list.
+   - Metrics: baseline, target, measurement method, and owner; if missing, ask or mark TBD.
+   - Rollout: communication / training / pilot / reversible configuration where relevant.
+   - Open Questions: owner, target alignment party, and whether it blocks v1.
 
 ### Phase 4.5 · Depth-pass loop (OPTIONAL — only on explicit PM request)
 
@@ -252,7 +261,7 @@ Otherwise, leave per-FR detail to `ticket-breakdown` (the dedicated handoff skil
 
 After body draft, invoke the `prd-critique` skill. Loop until no High items or 3rd round. Apply fixes between rounds.
 
-The reviewer's first pass also enforces `voice-and-register.md` — any technical-jargon survivor counts as a finding.
+The reviewer's first pass also enforces `voice-and-register.md` and `human-prd-writing-style.md` — any technical-jargon survivor or AI-smell paragraph counts as a finding.
 
 ### Phase 5 · Write to Confluence
 
@@ -292,7 +301,7 @@ Inline: AskUserQuestion · PRD body writing · Confluence write.
 NEVER:
 - Write to a published Confluence page without explicit confirmation
 - Auto-generate Jira tickets
-- **Skip the voice-gate (Phase 4 step 3) or the review-loop (Phase 4.7)**
+- **Skip the human PM style gate, voice-gate, or review-loop**
 - Improvise formatting — match `references/format-conventions.md`
 - Exceed the length budget without an explicit user request to go deep
 - Paste Phase 1.5 Q&A blocks into PRD body — they are working notes, not deliverable
@@ -319,6 +328,7 @@ NEVER:
 
 - `templates/prd-template.md` — QIMA PRD template (draft version)
 - `references/voice-and-register.md` — **enforced** non-technical voice rules
+- `references/human-prd-writing-style.md` — **enforced** human PM writing and decision-quality rules
 - `references/format-conventions.md` — section structure + style guardrails
 - `references/source-checklist.md` — Phase 1 source-type → MCP-tool mapping
 - `references/keyword-expansion.md` — Phase 0.5 patterns

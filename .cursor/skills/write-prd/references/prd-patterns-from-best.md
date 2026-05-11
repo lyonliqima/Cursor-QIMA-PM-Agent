@@ -1,13 +1,23 @@
-# PRD Patterns — distilled from QIMA best-in-class PRDs
+# PRD Patterns — distilled from QIMA PRDs
 
-Five reusable patterns extracted from a survey of high-quality QIMA PRDs (Suki Yuan's QIMAlabs portfolio + Matt Cai's IRP→QIMAOne sync). Use these as templates during Phase 4 drafting and Phase 4.5 depth-pass.
+Reusable patterns extracted from QIMA PRDs and product-decision documents by Suki Yuan, Matt Cai, Pierre Rioual, Eric Wang, and Bindu. Use these as templates during Phase 4 drafting and Phase 4.5 depth-pass; use `human-prd-writing-style.md` for the writing voice gate.
 
-Surveyed PRDs:
+Core surveyed PRDs:
 - QIMAlabs Master Data, Test Setup & Report Generation — Confluence 3354165416
 - Multilingual Report with AI Translation — Confluence 4574412846
 - Interactive Lab Testing Report PRD — Confluence 4439343118
 - Package Charge Management — Confluence 4379607054
 - IRP Inspector Sync to QIMAOne — Confluence 4605902887
+- QIMAlabs First Page — Confluence 3374219285
+- QIMAlabs Access Management — Confluence 3374022742
+- QIMAlabs Report Summary List — Confluence 3380412417
+- Report Email Configuration for Interactive Report Adoption — Confluence 4408016912
+- Protocol Maisa Worker — Quotation & validation — Confluence 4137910309
+- myQIMA Expansions 2026 — Confluence 4409393156
+- Life Sciences Back Office PRD — Confluence 4434526211
+- Corrective Action Plan Workflow System — Confluence 3626958849
+- Specification for 2nd party audits — Confluence 3428286511
+- Ericsson Desktop Review Data API Integration — Confluence 4384063510
 
 ---
 

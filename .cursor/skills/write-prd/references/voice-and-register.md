@@ -2,7 +2,7 @@
 
 The PRD audience is PMs, designers, business leads, and customer representatives, not engineers. Technical implementation belongs in the Tech Design document; the PRD should link to it instead of repeating it.
 
-> This file is a hard gate: after Phase 4 drafting and before Phase 4.7 review, scan the body against this checklist. Move any remaining technical implementation detail to *Appendix · For engineering reference* or remove it. The `prd-critique` skill checks this again.
+> This file is a hard gate: after Phase 4 drafting and before Phase 4.7 review, scan the body against this checklist. Move any remaining technical implementation detail to *Appendix · For engineering reference* or remove it. Also run the human writing gate in `human-prd-writing-style.md`. The `prd-critique` skill checks both again.
 
 ---
 
@@ -101,3 +101,17 @@ Search the PRD body and fix matches:
 - [ ] `killswitch` / `feature flag` / `ETag` / `CDN` / `lazy load`
 
 Remove matching implementation detail from the body or move it to Appendix.
+
+---
+
+## 8. Human / AI-Smell Quick Check
+
+Also search for generic AI wording and rewrite it into QIMA-specific business language:
+
+- [ ] "seamless", "robust", "intuitive", "user-friendly", "enhanced", "optimized", "streamlined", "leverage", "empower"
+- [ ] "This feature aims to..." followed by generic benefits
+- [ ] "not only... but also..." unless this exact trade-off is sourced
+- [ ] "improve efficiency" / "reduce manual effort" without saying whose work, what step, and what baseline
+- [ ] Any paragraph with no QIMA-specific noun: role, team, system, workflow, metric, source, or decision
+
+If a paragraph could be pasted into another company's PRD unchanged, rewrite it using `human-prd-writing-style.md` before review.
