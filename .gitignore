@@ -1,1 +1,5 @@
 .DS_Store
+.env
+.figma-token.local
+_prd-run/
+tmp/
