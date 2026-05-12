@@ -1,7 +1,7 @@
 ---
 name: ticket-breakdown
 description: "Break down PRDs into executable Jira development tickets, create a Jira Epic, associate all tickets to that Epic, and append the created ticket links back to the source Confluence PRD. Use when the user asks to break down a PRD into tickets, convert requirements to dev tasks, create Jira tickets from a PRD, split a spec into front-end and back-end work, create an Epic with child tickets, or says things like 'break this PRD into tickets', 'create dev tickets from this spec', 'split this into FE and BE tasks', 'convert requirements to Jira issues'. Also trigger when the user has a Confluence PRD link and wants development-ready Jira tickets."
-version: 0.2.0
+version: 0.2.1
 user-invocable: true
 argument-hint: "<confluence-prd-url> <jira-project-key> [design-url]"
 ---
@@ -327,11 +327,34 @@ An issue may contain **multiple User Stories** only when they are tightly relate
 - Use **specific values** — avoid vague descriptions
 - 2 to 4 acceptance criteria are usually enough for a User Story; QA can expand detailed test coverage separately
 
+### Design-State Ticket Standard
+
+When the source PRD, Figma, or prior Jira ticket shows multiple UI / document / workflow states, the ticket must describe every important state directly in the Jira body. Do not rely on a Figma screenshot alone.
+
+Use the style of [SP-33537](https://qima.atlassian.net/browse/SP-33537) as the reference:
+
+- Start with the Figma link and, when useful, a short **Current design** / **Expected design** comparison.
+- Add an **Expected design / state table** before the User Story when the design has multiple visible states.
+- Table columns should be: `Action / State`, `Screenshot or Figma frame`, `Details / Expected behavior`.
+- Each row must explain:
+  - what triggers the state;
+  - which buttons / actions become enabled or disabled;
+  - which file, report, language, status, or section appears;
+  - whether the state changes immediately or waits for a generated output;
+  - what default selection or follow-up action is expected.
+- If the ticket changes button behavior, include a **Button / Action Logic** matrix with columns like `Button`, `Applies to`, `Enabled when`, `Disabled when`, `Click behavior`.
+- If a button changes label after an action, state the exact transition, e.g. `Send report` -> `Resend report`.
+- If one action affects another language / row / file, state the cascade explicitly.
+- Keep the language operational and direct. Mixed English product terms with concise Chinese notes are acceptable when the source ticket / team uses them, but the logic must be unambiguous.
+
+For design-state tickets, replace the generic 2-4 AC limit with enough state coverage to make the ticket buildable. Prefer one compact state table plus one action logic table over many repetitive Given / When / Then items.
+
 ## Language Requirements
 
 - Use clear, concise, and technical language suitable for software development teams
 - Maintain a formal and collaborative tone in all responses
 - Ensure descriptions are unambiguous and implementation-oriented
+- For UI state / design-driven tickets, use practical PM language: describe what appears, what is enabled, what is disabled, what changes after click, and what the default behavior is. Avoid generic phrases like "improve user experience" or "update the UI accordingly".
 
 ## Safety and quality rules
 
