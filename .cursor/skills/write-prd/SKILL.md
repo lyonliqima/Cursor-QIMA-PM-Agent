@@ -243,7 +243,7 @@ User confirms outline or redirects.
    Never paste the full timeline into the PRD body; keep it in the local history report and cite the strongest sources.
 10. **Decision-quality pass**: before review, verify the draft contains:
    - Background: current situation, pain point, business impact, and baseline if available.
-   - Stakeholders: only named decision owners / leads / required reviewers; no generic sponsor, support, or delivery-team rows.
+   - Stakeholders: only named decision owners / leads / required reviewers; no generic sponsor, business SME, support, or delivery-team rows. Do not infer a business stakeholder from related materials; include one only when the PM explicitly asks for that person to appear in Section 3.
    - Scope: in-scope / out-of-scope decisions with reasons, not just a feature list.
    - Metrics: baseline, target, measurement method, and owner; if missing, ask or mark TBD.
    - Rollout: communication / training / pilot / reversible configuration where relevant.
@@ -268,7 +268,7 @@ The reviewer's first pass also enforces `voice-and-register.md` and `human-prd-w
 ### Phase 5 · Write to Confluence
 
 1. **Confirm target Space** with user (safety gate)
-2. Create page with `createConfluencePage` — status: **draft**. If the PRD contains tables, prefer `contentFormat: "adf"` or a post-create ADF update so every table is full page width (`table.attrs.width = 1800`, `layout = "center"`, `displayMode = "fixed"`). Do not return a page where FR / stakeholder / risk tables render as narrow content-width tables.
+2. Create page with `createConfluencePage` — status: **draft**. If the PRD contains tables, use `contentFormat: "adf"` for table fidelity or run a post-create ADF update. Markdown-to-Confluence conversion drops table width controls and will usually render narrow default tables, so do not rely on markdown when full-width tables matter. For each ADF `table` node, set `table.attrs.width = 1800`, `layout = "center"`, and `displayMode = "fixed"`, preserving any existing attrs such as `localId`. If ADF publishing is unavailable, tell the PM that the table width cannot be guaranteed instead of claiming it is fixed.
 3. Append only user-facing material:
    - **Open questions** (any unresolved)
    - Optional source appendix only if the PM explicitly asks for source links in the PRD

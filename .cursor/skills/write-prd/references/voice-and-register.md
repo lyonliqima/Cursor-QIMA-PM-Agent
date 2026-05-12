@@ -35,18 +35,17 @@ If the PRD exceeds the limit, cut Sections 5, 6, and 7 first. Most bloat comes f
 
 ## 2. Stakeholders
 
-List only named people with direct ownership, decision responsibility, or required review responsibility. Do not list repo or service names in the Responsibility column.
+List only named people with direct ownership, decision responsibility, or required review responsibility. Do not list repo or service names in the Responsibility column. Do not infer a `Business SME`, `Business Owner`, or `Business / Product Sponsor` row from source material; include a business-side row only when the PM explicitly asks for that person to appear in Section 3.
 
 | Role | Name | Responsibility |
 | --- | --- | --- |
 | Product Owner | Suki Yuan | Own PRD, scope, and acceptance readiness |
-| Business SME | Keff Lau | Confirm business priority and rollout direction |
 | Backend Lead | Hydie Chan (Titan TL) | Report service and gateway coordination |
 | Frontend Lead | Eric Wang | Frontend implementation coordination |
 
 Do not write: "Eric Wang — `aca-new` + `report-service-cloud` + `gateway-service-cloud`".
 
-Do not add generic or team-only rows such as `Business / Product Sponsor`, `Delivery Team`, `Backend Support`, `Frontend Support`, or `Titan / SP team` unless the PM provides a specific person and responsibility. If no business-side person is known, omit the business row instead of inventing one.
+Do not add generic or team-only rows such as `Business SME`, `Business Owner`, `Business / Product Sponsor`, `Delivery Team`, `Backend Support`, `Frontend Support`, or `Titan / SP team` unless the PM explicitly asks for that row and provides a specific person and responsibility. If no PM-approved business-side row is given, omit it.
 
 ---
 

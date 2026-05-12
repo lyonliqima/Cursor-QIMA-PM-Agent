@@ -108,9 +108,9 @@ Per-table rules:
 - Section 5.1 priority block is placed immediately above the first FR subsection.
 - Section 9.2 `Probability` uses `High`, `Medium`, or `Low`.
 - Section 11.1 `Blocks v1?` uses `Yes — {reason}` or `No, but affects {impact}`. No bare yes/no.
-- In the markdown draft, all tables use markdown pipe syntax. Never use HTML tables.
-- In the Confluence draft page, every PRD table must occupy the full page width. When writing with Atlassian MCP, prefer `contentFormat: "adf"` for table fidelity and set each ADF `table` node to a full-width layout, for example `attrs: { "isNumberColumnEnabled": false, "width": 1800, "layout": "center", "displayMode": "fixed" }`.
-- Do not rely on default markdown-to-Confluence table rendering when it produces narrow, content-width tables. If the page was created from markdown and tables render narrow, update the page in ADF and patch table attrs before returning the PRD URL.
+- In the markdown draft, all tables use markdown pipe syntax. Never use HTML tables in the draft.
+- In the Confluence draft page, every PRD table must occupy the full page width. Markdown-to-Confluence conversion does not preserve table width and commonly renders narrow default tables, so use `contentFormat: "adf"` when publishing table-heavy PRDs.
+- For every ADF `table` node, preserve existing attrs and set/override `width: 1800`, `layout: "center"`, and `displayMode: "fixed"`. If ADF publishing is unavailable, tell the PM the table width cannot be guaranteed instead of claiming the page is full-width.
 - Empty cells use `TBD`.
 
 Priority block:

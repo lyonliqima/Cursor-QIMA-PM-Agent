@@ -17,12 +17,12 @@ Voice rules:
 
 - PM voice. No repo names, service names, API paths, field names, commits, branches, PRs, or implementation jargon.
 - At most 3 Jira ticket references in the whole document, all in Section 1 or Appendix.
-- Stakeholders should be named people with direct ownership or decision responsibility, not repo lists or broad team rows.
+- Stakeholders should be named people with direct ownership or decision responsibility, not repo lists, inferred business SME rows, or broad team rows.
 - If technical detail is required, link to Tech Design or move it to Appendix.
 
 Formatting:
 
-- Use Markdown headings and pipe tables for drafting; when publishing to Confluence, convert tables to full-width Confluence/ADF tables.
+- Use Markdown headings and pipe tables for drafting; when publishing to Confluence, use ADF for tables because markdown conversion does not preserve full-width table layout.
 - Keep paragraphs to 3 lines or fewer.
 - Use inline links: `[label](url)`.
 - Do not use HTML tables, inline CSS, decorative callouts, or gradient headings.
@@ -81,15 +81,14 @@ Rules:
 | Role | Name | Responsibility |
 | --- | --- | --- |
 | Product Owner | {{PM}} | {{1 line}} |
-| Business Owner / SME | {{only if confirmed}} | {{business decision, rollout, or acceptance responsibility}} |
 | Engineering Lead | {{Eng Lead}} | {{1 line}} |
 | Design Lead | {{Designer}} | {{1 line}} |
 | QA Lead | {{QA}} | {{1 line}} |
 
 Rules:
 - No more than 6 rows.
-- Include `Business Owner / SME` only when a real business-side person is confirmed by source material or the PM.
-- Do not add generic rows like `Business / Product Sponsor`, `Delivery Team`, `Backend Support`, `Frontend Support`, or team-only names such as `Titan / SP team`.
+- Do not add `Business Owner`, `Business SME`, or `Business / Product Sponsor` by default, even if a source mentions a business name. Include a business-side row only when the PM explicitly asks for that person to appear in Section 3.
+- Do not add generic rows like `Delivery Team`, `Backend Support`, `Frontend Support`, or team-only names such as `Titan / SP team`.
 - Do not list repos or services per person.
 
 ---
