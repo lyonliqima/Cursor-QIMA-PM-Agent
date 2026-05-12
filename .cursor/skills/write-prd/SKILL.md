@@ -268,7 +268,7 @@ The reviewer's first pass also enforces `voice-and-register.md` and `human-prd-w
 ### Phase 5 · Write to Confluence
 
 1. **Confirm target Space** with user (safety gate)
-2. Create page with `createConfluencePage` — status: **draft**. If the PRD contains tables, use `contentFormat: "adf"` for table fidelity or run a post-create ADF update. Markdown-to-Confluence conversion drops table width controls and will usually render narrow default tables, so do not rely on markdown when full-width tables matter. For each ADF `table` node, set `table.attrs.width = 1800`, `layout = "center"`, and `displayMode = "fixed"`, preserving any existing attrs such as `localId`. If ADF publishing is unavailable, tell the PM that the table width cannot be guaranteed instead of claiming it is fixed.
+2. Create page with `createConfluencePage` — status: **draft**. Use `contentFormat: "markdown"` for PRD publishing by default. Do not force table width through ADF attrs (`width`, `layout`, or `displayMode`) from this skill; Confluence should render markdown pipe tables using its native page/table behavior.
 3. Append only user-facing material:
    - **Open questions** (any unresolved)
    - Optional source appendix only if the PM explicitly asks for source links in the PRD

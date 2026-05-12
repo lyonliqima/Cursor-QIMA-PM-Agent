@@ -22,7 +22,7 @@ Voice rules:
 
 Formatting:
 
-- Use Markdown headings and pipe tables for drafting; when publishing to Confluence, use ADF for tables because markdown conversion does not preserve full-width table layout.
+- Use Markdown headings and pipe tables for drafting and Confluence publishing by default. Do not force table width through ADF from this template.
 - Keep paragraphs to 3 lines or fewer.
 - Use inline links: `[label](url)`.
 - Do not use HTML tables, inline CSS, decorative callouts, or gradient headings.
