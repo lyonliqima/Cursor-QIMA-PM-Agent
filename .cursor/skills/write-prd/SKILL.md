@@ -39,7 +39,7 @@ Before any work, confirm you have:
 1. **Feature scope** — one-sentence description of what's being built
 2. **Target Confluence location** — Space key + parent page URL (ask user if not given)
 3. **Template** — default to `qima-prd-writing-guide`; confirm if user wants otherwise
-4. **North Star / objective** — the business goal this PRD serves
+4. **Primary objective** — the confirmed business goal this PRD serves, in plain language
 
 If any of these four are missing, ASK the user first. Do not guess.
 
@@ -227,21 +227,23 @@ User confirms outline or redirects.
    **Static design assets / cropped screenshots**: when the user asks for images in the PRD, when Confluence needs URL-hosted screenshots, or when a long Figma page must be split into PRD-section-specific crops, load the internal `prd-design-assets` skill. Use it to export via Figma API, crop focused regions, publish stable image URLs, and insert the cropped screenshots next to the matching Design subsection. Do not insert one long screenshot when section-level crops are available.
 
    See `references/figma-handling.md` for the section-scoping algorithm and the Figma for Confluence rendering rule.
-6. **Each section ends with** a short Source pointer (e.g. *"Source: Tech Design Confluence 4559699969"*) — not a full citation array.
-7. **Codebase-report use**: convert codebase findings into product language:
+6. **No visible inline source footers**: do not add `Source:` lines under each section in the formal PRD body. Keep evidence in the internal source ledger, Section 1 Related Materials, or Appendix A only when the user explicitly wants a source appendix.
+7. **Primary Objective style**: write Section 2.2 as 2-4 short, certain sentences. Avoid "North Star", "leading proxy", adoption targets, percentages, dates, or KPI language unless the source material or PM explicitly confirms them. If the objective is not confirmed, ask before drafting instead of inventing a polished metric.
+8. **Codebase-report use**: convert codebase findings into product language:
    - code field -> business field
    - mapper logic -> user-visible rule
    - API/data-flow constraint -> dependency/risk
    - evidence path -> acceptance criterion
    Never paste raw implementation detail into the main PRD body.
-8. **History-report use**: convert Confluence/Jira history into PRD context:
+9. **History-report use**: convert Confluence/Jira history into PRD context:
    - old decision -> background or scope rationale
    - recent Jira/Confluence update -> current direction or risk
    - conflict between sources -> open question
    - repeated bug/support ask -> pain point or acceptance criterion
    Never paste the full timeline into the PRD body; keep it in the local history report and cite the strongest sources.
-9. **Decision-quality pass**: before review, verify the draft contains:
+10. **Decision-quality pass**: before review, verify the draft contains:
    - Background: current situation, pain point, business impact, and baseline if available.
+   - Stakeholders: only named decision owners / leads / required reviewers; no generic sponsor, support, or delivery-team rows.
    - Scope: in-scope / out-of-scope decisions with reasons, not just a feature list.
    - Metrics: baseline, target, measurement method, and owner; if missing, ask or mark TBD.
    - Rollout: communication / training / pilot / reversible configuration where relevant.
@@ -266,10 +268,11 @@ The reviewer's first pass also enforces `voice-and-register.md` and `human-prd-w
 ### Phase 5 · Write to Confluence
 
 1. **Confirm target Space** with user (safety gate)
-2. Create page with `createConfluencePage` — status: **draft**
-3. Append:
-   - **Source ledger** (compact — 1 row per source, no per-claim citation fan-out)
+2. Create page with `createConfluencePage` — status: **draft**. If the PRD contains tables, prefer `contentFormat: "adf"` or a post-create ADF update so every table is full page width (`table.attrs.width = 1800`, `layout = "center"`, `displayMode = "fixed"`). Do not return a page where FR / stakeholder / risk tables render as narrow content-width tables.
+3. Append only user-facing material:
    - **Open questions** (any unresolved)
+   - Optional source appendix only if the PM explicitly asks for source links in the PRD
+   Keep the full source ledger as a local/internal working note by default; do not publish it into the formal PRD.
 4. Return URL + 3-bullet summary of what was written and what needs user attention.
 
 ---
@@ -312,11 +315,11 @@ NEVER:
 
 ## Inputs & outputs
 
-**Inputs**: feature brief · optional local assets / Figma URLs / Confluence-Jira seeds · target Confluence + North Star.
+**Inputs**: feature brief · optional local assets / Figma URLs / Confluence-Jira seeds · target Confluence + confirmed primary objective.
 
 **Outputs**:
 - Confluence draft page URL (primary)
-- Compact Source ledger
+- Compact internal source ledger or optional source appendix when requested
 - Open-questions list
 - Local `context-manifest.md`
 - Local deep codebase report + PRD-ready field guide for product/software PRDs

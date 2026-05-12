@@ -17,12 +17,12 @@ Voice rules:
 
 - PM voice. No repo names, service names, API paths, field names, commits, branches, PRs, or implementation jargon.
 - At most 3 Jira ticket references in the whole document, all in Section 1 or Appendix.
-- Stakeholders should be team + lead, not repo lists.
+- Stakeholders should be named people with direct ownership or decision responsibility, not repo lists or broad team rows.
 - If technical detail is required, link to Tech Design or move it to Appendix.
 
 Formatting:
 
-- Use Markdown headings and pipe tables.
+- Use Markdown headings and pipe tables for drafting; when publishing to Confluence, convert tables to full-width Confluence/ADF tables.
 - Keep paragraphs to 3 lines or fewer.
 - Use inline links: `[label](url)`.
 - Do not use HTML tables, inline CSS, decorative callouts, or gradient headings.
@@ -36,7 +36,7 @@ If a section truly has no content, keep the heading and write:
 ## Template Body
 
 ```markdown
-# 1. Overview (Mandatory)
+# 1. Overview
 
 | Field | Content |
 | --- | --- |
@@ -51,11 +51,11 @@ One paragraph (3-5 sentences): what is being built, for whom, and why now.
 
 ---
 
-# 2. Background & Objective (Mandatory)
+# 2. Background & Objective
 
 ## 2.1 Business Problem / Opportunity
 
-Three bold-lead-in paragraphs, each citing one source:
+Three bold-lead-in paragraphs grounded in verified context. Do not add visible `Source:` lines in the PRD body.
 
 1. **{{Pain 1 short label}}**: {{evidence + 1-line implication}}
 2. **{{Pain 2 short label}}**: {{evidence + 1-line implication}}
@@ -63,8 +63,12 @@ Three bold-lead-in paragraphs, each citing one source:
 
 ## 2.2 Primary Objective
 
-- **North Star (Lagging)**: {{e.g. improve customer NPS}}
-- **Leading proxy (within 30 days)**: 3-4 numeric targets, one line each
+Write 2-4 plain sentences describing the concrete business goal for this PRD.
+
+Rules:
+- Use only goals that are confirmed by source material or by the PM.
+- Do not invent North Star metrics, leading proxies, percentages, timelines, or adoption targets.
+- If a measurable target is confirmed, mention it once in simple language; otherwise keep the objective qualitative and certain.
 
 ## 2.3 Why Now
 
@@ -72,21 +76,25 @@ Three bold-lead-in paragraphs, each citing one source:
 
 ---
 
-# 3. Stakeholders (Mandatory)
+# 3. Stakeholders
 
 | Role | Name | Responsibility |
 | --- | --- | --- |
 | Product Owner | {{PM}} | {{1 line}} |
+| Business Owner / SME | {{only if confirmed}} | {{business decision, rollout, or acceptance responsibility}} |
 | Engineering Lead | {{Eng Lead}} | {{1 line}} |
 | Design Lead | {{Designer}} | {{1 line}} |
 | QA Lead | {{QA}} | {{1 line}} |
-| Sponsor / Stakeholder | {{Name}} | {{1 line}} |
 
-Rule: no more than 8 rows. Do not list repos or services per person.
+Rules:
+- No more than 6 rows.
+- Include `Business Owner / SME` only when a real business-side person is confirmed by source material or the PM.
+- Do not add generic rows like `Business / Product Sponsor`, `Delivery Team`, `Backend Support`, `Frontend Support`, or team-only names such as `Titan / SP team`.
+- Do not list repos or services per person.
 
 ---
 
-# 4. User Stories / Use Cases (Mandatory)
+# 4. User Stories / Use Cases
 
 ## 4.1 Target Users & Personas
 
@@ -103,7 +111,7 @@ No more than 7 stories. Format:
 
 ---
 
-# 5. Requirements (Mandatory)
+# 5. Requirements
 
 **Priority definitions**:
 
@@ -174,7 +182,7 @@ No more than 1 AC per FR. Format:
 
 ---
 
-# 8. Analytics & Tracking (Mandatory)
+# 8. Analytics & Tracking
 
 ## 8.1 Events to Track
 
@@ -219,7 +227,7 @@ No more than 6 rows. Probability uses High / Medium / Low.
 
 ---
 
-# 10. Rollout & Release Plan (Mandatory)
+# 10. Rollout & Release Plan
 
 ## 10.1 Phasing
 
@@ -264,9 +272,9 @@ No more than 6 rows.
 
 ---
 
-## Appendix A — Source-of-Truth Links (Optional)
+## Appendix A — Source-of-Truth Links (Only If Requested)
 
-No more than 10 rows. One row per source; not a per-claim citation map.
+Include this appendix only when the PM explicitly asks for source links in the formal PRD. Otherwise keep the source ledger as an internal working note.
 
 | Type | Source | Link |
 | --- | --- | --- |

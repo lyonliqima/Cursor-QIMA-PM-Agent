@@ -103,8 +103,10 @@ Section 12 / ROVO table is deprecated and must not appear.
 
 Beyond section presence and order, the doc must conform to `${CLAUDE_PLUGIN_ROOT}/skills/write-prd/references/format-conventions.md`, pinned to the Sample weighing and labeling function PRD as the canonical example. Run the validation checklist as part of every review:
 
-- Section titles match canonical form exactly, for example `# 1. Overview (Mandatory)`.
+- Section titles match canonical form exactly, for example `# 1. Overview`; template-only tags like `(Mandatory)` should not appear in the published PRD.
 - Section 1 Overview meta-table has 6 rows: `Document Owner`, `Date`, `Version`, `Target System`, `Phase`, `Related Materials`.
+- Confluence-rendered tables occupy the full page width. Narrow content-width tables in Stakeholders, FRs, Risks, Rollout Gates, or Open Questions are formatting findings.
+- Section 3 Stakeholders lists named people with direct ownership only; generic rows such as `Business / Product Sponsor`, `Delivery Team`, `Backend Support`, `Frontend Support`, or team-only names are findings unless a specific person and responsibility are confirmed.
 - Section 5.1 has the priority block above FR tables.
 - Section 5.1.x FR tables use columns `ID · Function · Priority · Description / Notes`; ID style `**FR-A1**`.
 - Section 5.2 OOS uses `Item · Reason` columns.
@@ -118,7 +120,7 @@ Beyond section presence and order, the doc must conform to `${CLAUDE_PLUGIN_ROOT
 - Footer has an italic single-line next action by the document owner.
 - IDs use `**FR-{letter}{n}**`, `**US-{n}**`, `**AC-N (FR-X: label)**`.
 - Module / page titles in Section 5.1.x and Section 6.x use em-dash `—` separators.
-- Mandatory / Optional tags use parentheses; Optional-with-reason uses `(Optional — kept in this PRD because X)`.
+- Published PRD headings do not include `Mandatory` / `Optional` tags; if a section is omitted or intentionally retained, the reason belongs in drafting notes or open questions, not in the heading.
 
 Format violations are at minimum Medium. Structural omissions, wrong titles, missing priority block, or missing Section 6.3 / 10.3 are High.
 

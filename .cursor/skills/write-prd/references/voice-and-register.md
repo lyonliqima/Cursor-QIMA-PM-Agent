@@ -35,14 +35,18 @@ If the PRD exceeds the limit, cut Sections 5, 6, and 7 first. Most bloat comes f
 
 ## 2. Stakeholders
 
-List only team name, lead, and responsibility. Do not list repo or service names in the Responsibility column.
+List only named people with direct ownership, decision responsibility, or required review responsibility. Do not list repo or service names in the Responsibility column.
 
 | Role | Name | Responsibility |
 | --- | --- | --- |
+| Product Owner | Suki Yuan | Own PRD, scope, and acceptance readiness |
+| Business SME | Keff Lau | Confirm business priority and rollout direction |
 | Backend Lead | Hydie Chan (Titan TL) | Report service and gateway coordination |
 | Frontend Lead | Eric Wang | Frontend implementation coordination |
 
 Do not write: "Eric Wang — `aca-new` + `report-service-cloud` + `gateway-service-cloud`".
+
+Do not add generic or team-only rows such as `Business / Product Sponsor`, `Delivery Team`, `Backend Support`, `Frontend Support`, or `Titan / SP team` unless the PM provides a specific person and responsibility. If no business-side person is known, omit the business row instead of inventing one.
 
 ---
 
@@ -63,7 +67,7 @@ Specific service names, endpoints, function paths, and field contracts belong in
 
 ## 4. Section 1 Related Materials Row
 
-Use at most 6 links, one line each: Tech Design, Figma, main UX audit, main memo, prototype, or Epic. Do not list 8-12 source links here; the Source ledger is appended separately.
+Use at most 6 links, one line each: Tech Design, Figma, main UX audit, main memo, prototype, or Epic. Do not list 8-12 source links here, and do not append a visible source ledger unless the PM explicitly asks for one in the formal PRD.
 
 ---
 

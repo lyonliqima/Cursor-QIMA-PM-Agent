@@ -14,7 +14,7 @@ This file is authoritative for Phase 4 drafting and Phase 4.7 review. `prd-criti
 
 | Markdown | Used for | Tag |
 |---|---|---|
-| `#` | Top-level sections 1-11 and appendices | Mandatory / Optional |
+| `#` | Top-level sections 1-11 and appendices | none in published PRD |
 | `##` | Same as `#` when published as a sub-page; choose one style and stay consistent | none |
 | `###` | First-level subsection, such as `2.1`, `5.1`, `9.2` | none |
 | `####` | Second-level subsection or module split, such as `5.1.1 Module A — Preparation` | none |
@@ -22,8 +22,8 @@ This file is authoritative for Phase 4 drafting and Phase 4.7 review. `prd-criti
 ### 1.2 Heading Text Format
 
 ```markdown
-# 1. Overview (Mandatory)
-## 2. Background & Objective (Mandatory)
+# 1. Overview
+## 2. Background & Objective
 ### 2.1 Business Problem / Opportunity
 #### 5.1.1 Module A — Preparation
 ## Appendix A — Existing Tool Rules
@@ -31,7 +31,7 @@ This file is authoritative for Phase 4 drafting and Phase 4.7 review. `prd-criti
 
 Rules:
 
-- Top-level sections use: number + dot + space + English title + `(Mandatory)` or `(Optional)`.
+- Top-level sections use: number + dot + space + English title. Do not include template-only tags like `(Mandatory)` in the published PRD.
 - Subsection numbering uses `2.1`, `2.2`, `5.1.1`; never roman numerals.
 - Module/page titles use an em dash with single spaces around it.
 - Appendices use `Appendix A`, `Appendix B`; never `Appendix 1`.
@@ -39,16 +39,16 @@ Rules:
 ### 1.3 Exact 11 Sections
 
 ```markdown
-1. Overview (Mandatory)
-2. Background & Objective (Mandatory)
+1. Overview
+2. Background & Objective
    2.1 Business Problem / Opportunity
    2.2 Primary Objective
    2.3 Why Now
-3. Stakeholders (Mandatory)
-4. User Stories / Use Cases (Mandatory)
+3. Stakeholders
+4. User Stories / Use Cases
    4.1 Target Users & Personas
    4.2 User Stories
-5. Requirements (Mandatory)
+5. Requirements
    5.1 Functional Requirements and Priority
        5.1.1 Module A — {name}
        5.1.2 Module B — {name}
@@ -59,19 +59,19 @@ Rules:
    6.2 Page 2 — {name}
    6.3 Key Interaction Specs
    6.4 Edge Cases
-7. Acceptance Criteria (Optional)
-8. Analytics & Tracking (Mandatory)
+7. Acceptance Criteria
+8. Analytics & Tracking
    8.1 Events to Track
    8.2 Success Metrics
    8.3 Measurement Method
-9. Dependencies & Risks (Optional — kept because {reason})
+9. Dependencies & Risks
    9.1 Dependencies
    9.2 Risks & Mitigations
-10. Rollout & Release Plan (Mandatory)
+10. Rollout & Release Plan
     10.1 Phasing
     10.2 Beta / Pilot Plan
     10.3 Release Gates
-11. Open Questions & Next Steps (Optional)
+11. Open Questions & Next Steps
     11.1 Open Questions
     11.2 Next Steps
 
@@ -79,7 +79,7 @@ Appendix A — {name}
 Appendix B — {name}
 ```
 
-The `(Optional — kept because X)` form is the canonical pattern for retaining an optional section with a reason.
+If a section is intentionally omitted, explain the reason in the drafting notes or open questions, not in the section title.
 
 ---
 
@@ -108,7 +108,9 @@ Per-table rules:
 - Section 5.1 priority block is placed immediately above the first FR subsection.
 - Section 9.2 `Probability` uses `High`, `Medium`, or `Low`.
 - Section 11.1 `Blocks v1?` uses `Yes — {reason}` or `No, but affects {impact}`. No bare yes/no.
-- All tables use markdown pipe syntax. Never use HTML tables.
+- In the markdown draft, all tables use markdown pipe syntax. Never use HTML tables.
+- In the Confluence draft page, every PRD table must occupy the full page width. When writing with Atlassian MCP, prefer `contentFormat: "adf"` for table fidelity and set each ADF `table` node to a full-width layout, for example `attrs: { "isNumberColumnEnabled": false, "width": 1800, "layout": "center", "displayMode": "fixed" }`.
+- Do not rely on default markdown-to-Confluence table rendering when it produces narrow, content-width tables. If the page was created from markdown and tables render narrow, update the page in ADF and patch table attrs before returning the PRD URL.
 - Empty cells use `TBD`.
 
 Priority block:
@@ -221,9 +223,9 @@ All skill instructions and generated template content must be English. Product n
 
 | Rule | Right | Wrong |
 |---|---|---|
-| Mandatory tag | `# 1. Overview (Mandatory)` | `# 1. Overview - Mandatory` |
+| Clean section title | `# 1. Overview` | `# 1. Overview (Mandatory)` |
 | Module separator | `Module A — Preparation` | `Module A: Preparation` |
-| Optional with reason | `(Optional — kept because risk coverage is needed)` | `(Optional - many risks)` |
+| Optional-section reason | Explain in drafting notes or open questions | Put `(Optional)` in a heading |
 | Label colon | `**Success criteria**: reduce manual work` | mixed punctuation |
 | Numeric ranges | `2-3 sprints` | ambiguous prose |
 | Comparison operators | `>= 95%`, `<= 30 minutes` | vague targets |
@@ -290,7 +292,7 @@ Before sign-off, `prd-critique` verifies:
 
 - [ ] All 11 sections present in canonical order with exact titles.
 - [ ] Section 1 meta-table has all 6 required rows.
-- [ ] Mandatory / Optional tags use the required format.
+- [ ] Published headings are clean and do not include `Mandatory` / `Optional` tags.
 - [ ] Every FR ID uses `**FR-{letter}{n}**`.
 - [ ] Priority block appears above Section 5.1.
 - [ ] Section 5.2 Out of Scope items have non-empty reasons.
@@ -312,7 +314,7 @@ Any failure is a finding. Format violations are at minimum Medium priority; stru
 
 - HTML tables, nested tables, or merged cells.
 - Translating canonical column headers inconsistently between drafts.
-- Missing Mandatory / Optional tags.
+- Adding `Mandatory` / `Optional` tags to published headings.
 - Hyphen instead of em dash in module/page titles.
 - Bare Yes/No in Open Questions.
 - Missing priority block above Section 5.1.
