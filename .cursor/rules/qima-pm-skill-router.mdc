@@ -1,0 +1,25 @@
+---
+description: Route QIMA PM Agent requests to the correct project skill
+alwaysApply: true
+---
+
+# QIMA PM Skill Router
+
+When a user request matches one of these workflows, immediately read and follow the matching `.cursor/skills/<skill>/SKILL.md` before answering or acting. Do not rely on general model memory when a project skill exists.
+
+## Routing Map
+
+- `write-prd`: Use for "write/draft/create PRD", "requirements document", "run PRD skill", or any PM request to turn scattered context into a Confluence-ready PRD. Do not use for reviewing an existing PRD or creating Jira tickets.
+- `codebase-understanding`: Use for "create a codebase report", "深入看看代码库", "trace this feature across the stack", "what's the codebase for X", or when `write-prd` needs product/software codebase research.
+- `prd-critique`: Use after a PRD draft exists, or when the user asks to review, critique, validate, stress-test, red-team, or challenge a PRD. Read-only by default; do not edit the PRD.
+- `ticket-breakdown`: Use when the user asks to break a PRD/spec into Jira tickets, create an Epic, split FE/BE/API work, or convert requirements into implementation backlog. Always present the ticket plan and wait for explicit approval before Jira writes.
+- `prd-design-assets`: Internal helper only. Use from `write-prd` or `ticket-breakdown` when static Figma screenshots/crops are needed for PRD or Jira ticket references. Follow `figma-jira-github-assets.mdc` for GitHub raw image hosting.
+- `design-critique`: Use for evidence-based or business-aware design review, especially Figma + Confluence/Jira/repo context. Findings must cite business rules, code implementation, and Jira/history evidence when available.
+- `ui`: Use for UI design/build/review/polish/adapt/animate/harden/optimize/copy/color/layout/type requests. Route to the mode inside the skill (`shape`, `craft`, `critique`, `audit`, `polish`, etc.).
+- `mermaid-chart`: Use when the user asks to convert text, PRD, article, notes, Confluence, or Jira context into Mermaid diagrams, flowcharts, sequence diagrams, timelines, mind maps, architecture diagrams, or Confluence Mermaid subpages.
+
+## General Rules
+
+- If multiple skills apply, sequence them in the least-risk order: `codebase-understanding` -> `write-prd` -> `prd-critique` -> `ticket-breakdown` -> `prd-design-assets`.
+- For external writes to Confluence, Jira, GitHub, or Figma, require the approval gate defined by the active skill.
+- If required tools or credentials are unavailable, state the gap and continue with the best source-aware fallback.

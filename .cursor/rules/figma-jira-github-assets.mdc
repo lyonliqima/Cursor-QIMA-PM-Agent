@@ -1,0 +1,27 @@
+---
+description: Route Figma design image updates for Jira/PRD/Confluence through GitHub asset hosting
+alwaysApply: true
+---
+
+# Figma Design Asset Routing
+
+When a user asks to put a Figma design image into Jira, PRD, or Confluence, or to replace/update existing design images, route through the existing design asset workflow by default.
+
+Trigger examples:
+
+- "把这个 Figma 放进 ticket/PRD/Confluence"
+- "替换原来的图，图片和 Figma 链接都更新"
+- "更新 Jira 里的设计图"
+- "insert/update design screenshots"
+
+Default workflow:
+
+1. Load and follow `.cursor/skills/prd-design-assets/SKILL.md`.
+2. Parse the Figma `fileKey` and `node-id`; convert dashed node IDs to colon IDs for API calls.
+3. Use `.cursor/skills/write-prd/scripts/fetch-figma.sh` to export PNGs via Figma REST API from `~/.config/figma-token` or `FIGMA_TOKEN_FILE`.
+4. If the URL points to a Section or large node, inspect metadata and export the relevant child frames instead of approximating with browser screenshots.
+5. Put images in `lyonliqima/prd-assets` under a stable, ticket- or feature-specific path with ASCII kebab-case filenames.
+6. Commit and push the asset repo, then use `raw.githubusercontent.com` image URLs in Jira/PRD/Confluence.
+7. Update the live Figma link near the images.
+
+Avoid first trying generic browser screenshots, MCP-rendered approximations, or temporary Figma asset URLs unless the API export path is unavailable.
