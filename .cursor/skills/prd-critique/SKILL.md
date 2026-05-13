@@ -1,6 +1,6 @@
 ---
 name: prd-critique
-description: Red-team, senior PMO/CPO-level PRD critique skill for QIMA PRDs. Use after write-prd produces a full draft, or whenever the user asks to review, critique, evaluate, challenge, stress-test, or validate an existing PRD. Reads a local PRD or Confluence URL end-to-end, cross-checks codebase facts, Jira history, and Confluence decisions when available, applies QIMA-specific and best-practice PRD review dimensions, and returns evidence-backed High/Medium/Low findings. Runs read-only and never edits the PRD itself.
+description: Red-team, senior PMO/CPO-level PRD critique skill for QIMA PRDs. Use after write-prd produces a full draft, or whenever the user asks to review, critique, evaluate, challenge, stress-test, or validate an existing PRD. Reads a local PRD or Confluence URL end-to-end, cross-checks codebase facts, Jira history, and Confluence decisions when available, applies QIMA-specific, Bertrand product-principle, TIC B2B system, UX, and best-practice PRD review dimensions, and returns evidence-backed High/Medium/Low findings. Runs read-only and never edits the PRD itself.
 version: 1.1.1
 user-invocable: true
 argument-hint: "<prd-file-or-confluence-url> [feature/module] [repo-path] [context]"
@@ -237,6 +237,52 @@ Use this bar in addition to QIMA rules. It reflects common high-quality PRD guid
 | Testability | Each FR has at least one matching AC |
 | Risk Awareness | Edge cases, failure modes, and rollback mechanism are discussed |
 
+## Bertrand Product Principles Lens
+
+After the evidence and format checks, run a second pass using QIMA product-review principles associated with Bertrand Mene's recurring feedback style. These findings should be grounded in the PRD and source evidence, not generic product philosophy.
+
+| Principle | Review questions | Severity guidance |
+|---|---|---|
+| Challenge the necessity | Does the PRD prove why this needs to be built now? Is it a real repeated problem or a single stakeholder/customer request? Could configuration, process change, or simplification solve it? | Missing necessity rationale is High when it drives new development scope. |
+| System and data first | Does the solution simplify the workflow through system/data automation, or does it add more manual work? If operations intervention is required, is the operational cost sustainable? | A solution that mainly adds manual steps without justification is High. |
+| Scalability test | If 100 customers/labs/markets need this, does the model still work? Is the design standardized enough to reuse, or is it a one-off customization? | Single-customer customization without reuse strategy is High or Medium depending on scope. |
+| Notification strategy | If the feature adds emails, reminders, or alerts, does the notification solve the root problem or mask a broken flow? Does the CTA take the user directly to the needed action? Is notification volume controlled? | Notification-as-band-aid is High when it hides a workflow flaw; Medium when it adds noise. |
+| Less is more | Does the PRD add unnecessary fields, table columns, filters, reports, or form steps? Does it measure usage, not just delivery? | Information overload or missing usage metrics is Medium by default. |
+| China market check | If China users or `.cn` / `.com` split are relevant, does the PRD account for local performance, workflow expectations, payment / communication norms, and localization beyond translation? | Missing China adaptation is Medium, High if it blocks adoption or access. |
+
+In the output, add 3-5 concrete questions under the Bertrand Product Lens section when these principles expose unanswered product decisions.
+
+## TIC B2B System Lens
+
+When the PRD affects QIMA TIC (Testing, Inspection, Certification) B2B systems, review it as a high-compliance, multi-role, long-running workflow platform. Apply only relevant checks; do not force every dimension onto every PRD.
+
+| Dimension | What to check | Severity guidance |
+|---|---|---|
+| Multi-tenancy and organization model | Tenant / customer / lab / business-unit hierarchy, data isolation, organization-level configuration, cross-organization collaboration. | Missing data isolation or tenant model is High when customer data or permissions are impacted. |
+| RBAC and workflow design | Role model, least privilege, role separation, approval chain, state transitions, fallback / reassignment, auditability of permission changes. | Missing role separation, approval state, or workflow status model is High. |
+| Data integrity and audit trail | Who changed what and when, version history, soft delete / archive, modification reasons, batch operation protection, retention. | Missing audit trail for legally meaningful data is High. |
+| List and table UX | Default columns, search / filters, batch operations, pagination / load strategy, status visualization, configurable columns. | High when high-frequency operations become hard to execute; otherwise Medium. |
+| Form and data entry | Minimum fields, smart defaults, real-time validation, dependent field behavior, draft save, mobile-friendly input when field users are involved. | Medium by default; High when errors can affect compliance or report correctness. |
+| Notification and collaboration | Notification priority, action-oriented CTA, aggregation, escalation, message center, external notification configurability. | Medium unless missed notifications block workflow or compliance deadlines. |
+| Reporting and dashboard | Role-specific dashboards, information density, actionable exceptions, export/share, trend comparisons. | Medium when metrics or exception handling are unclear. |
+| Client portal and self-service | Customer status visibility, report/certificate download, online application, billing/payment, traceable communication. | Medium when customer-facing operations remain unnecessarily manual. |
+| Integration and openness | API-first behavior, webhooks, standard data formats, integration documentation, sandbox/test environment. | High when the PRD assumes an integration without contract or owner. |
+| Compliance and standards | Applicable standards, compliance impact, electronic signature, data retention, multilingual / multi-region obligations. | Missing compliance impact is High for report, certificate, approval, or regulated data changes. |
+
+For TIC B2B system PRDs, flag missing RBAC/workflow, audit trail, data integrity, integration ownership, or compliance impact as High unless the PRD clearly proves they are not relevant.
+
+## UX Structural Scan
+
+Run a light UX review at PRD level. Do not critique visual design details unless screenshots or Figma frames are part of the PRD.
+
+| UX check | What to look for |
+|---|---|
+| Copy precision | User-facing labels, helper text, errors, notifications, and CTAs are specific enough for users to act without guessing. |
+| Action priority | The most likely next action is prominent in the described flow; secondary actions do not compete with the primary task. |
+| Consistency | The flow follows established QIMA product patterns unless a deliberate change is explained. |
+| Stale information cleanup | The PRD does not preserve outdated phone numbers, URLs, brand names, legacy labels, or removed features. |
+| Cognitive load | Tables, forms, reports, and dashboards avoid unnecessary fields and make status / exceptions easy to scan. |
+
 ## Finding priority
 
 | Priority | Definition |
@@ -244,6 +290,15 @@ Use this bar in addition to QIMA rules. It reflects common high-quality PRD guid
 | High | Blocks development, creates significant ambiguity, contradicts code/Jira/Confluence evidence, invents unsupported facts, or violates QIMA voice/register hard rules. Must resolve before handoff. |
 | Medium | Reduces quality or alignment, hides risk, weakens testability, lacks evidence for non-blocking claims, or misses applicable best-PRD patterns. Should resolve before development starts. |
 | Low | Polish or readability issue. Nice to address. |
+
+Additional severity calibration:
+
+- Lack of necessity rationale, unscalable single-customer design, or a solution that mainly adds manual work without justification -> High.
+- Notification that masks a broken workflow instead of fixing the workflow -> High when it is the main solution, Medium when it adds avoidable noise.
+- Missing usage/adoption metrics, information overload, or weak table/form usability -> Medium unless it blocks the core workflow.
+- Missing China-market adaptation -> Medium, or High if `.com` access, payment, communication, or localization constraints block use.
+- TIC B2B missing RBAC, workflow state, audit trail, data integrity, compliance impact, or integration ownership -> High.
+- TIC B2B weak list/table/form UX, reporting, self-service, or notification strategy -> Medium unless it creates operational or compliance risk.
 
 ## Output format
 
@@ -295,6 +350,15 @@ Return exactly this structure:
 
 ### Pattern Coverage
 - **FR-N** ({type}) — Pattern X: present / missing — "Question for user: {specific ask}"
+
+### Bertrand Product Lens
+- Necessity / system-data-first / scalability / notification / less-is-more / China-market findings or questions
+
+### TIC B2B System Lens
+- RBAC/workflow / audit trail / table-form UX / reporting / integration / compliance findings or "Not applicable"
+
+### UX Structural Scan
+- Copy precision / action priority / consistency / stale information / cognitive-load findings or "No structural UX issues found"
 
 ### Codebase / Jira / Confluence Risks
 - [Risk surfaced only by external evidence, not obvious from the PRD]
