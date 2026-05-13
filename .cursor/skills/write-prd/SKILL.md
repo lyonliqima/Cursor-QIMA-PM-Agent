@@ -229,21 +229,30 @@ User confirms outline or redirects.
    See `references/figma-handling.md` for the section-scoping algorithm and the Figma for Confluence rendering rule.
 6. **No visible inline source footers**: do not add `Source:` lines under each section in the formal PRD body. Keep evidence in the internal source ledger, Section 1 Related Materials, or Appendix A only when the user explicitly wants a source appendix.
 7. **Primary Objective style**: write Section 2.2 as 2-4 short, certain sentences. Avoid "North Star", "leading proxy", adoption targets, percentages, dates, or KPI language unless the source material or PM explicitly confirms them. If the objective is not confirmed, ask before drafting instead of inventing a polished metric.
-8. **Codebase-report use**: convert codebase findings into product language:
+8. **Meeting-note business-rule coverage**: when a meeting note, walkthrough, or PM explanation contains concrete user-visible behavior, promote it into the PRD body. Do not leave these rules only in the source ledger, ticket appendix, or broad summary.
+   - customer-specific examples -> user stories or requirement notes when they change behavior
+   - "must still show", "can enable/disable", "do not duplicate", "fallback to X", "warn before overwrite" -> FR notes plus matching AC
+   - per-role actions such as generate, edit online, confirm, merge, preview, approve -> user stories or interaction specs
+   - ticket lists -> appendix only; they prove coverage but do not replace business rules in Section 4/5/7
+   If adding every detail would bloat the PRD, keep the prose short but preserve the behavior in the relevant US / FR / AC row.
+9. **Codebase-report use**: convert codebase findings into product language:
    - code field -> business field
    - mapper logic -> user-visible rule
    - API/data-flow constraint -> dependency/risk
    - evidence path -> acceptance criterion
    Never paste raw implementation detail into the main PRD body.
-9. **History-report use**: convert Confluence/Jira history into PRD context:
+10. **History-report use**: convert Confluence/Jira history into PRD context:
    - old decision -> background or scope rationale
    - recent Jira/Confluence update -> current direction or risk
    - conflict between sources -> open question
    - repeated bug/support ask -> pain point or acceptance criterion
    Never paste the full timeline into the PRD body; keep it in the local history report and cite the strongest sources.
-10. **Decision-quality pass**: before review, verify the draft contains:
+11. **Decision-quality pass**: before review, verify the draft contains:
    - Background: current situation, pain point, business impact, and baseline if available.
    - Stakeholders: only named decision owners / leads / required reviewers; no generic sponsor, business SME, support, or delivery-team rows. Do not infer a business stakeholder from related materials; include one only when the PM explicitly asks for that person to appear in Section 3.
+   - User Stories: cover concrete user actions from source material, not just generic personas.
+   - Requirements: include the material business rules from meeting notes / tickets, especially exceptions, display rules, enable-disable rules, fallback behavior, and overwrite warnings.
+   - Acceptance Criteria: add a matching AC for each behavior-changing rule introduced in an FR note.
    - Scope: in-scope / out-of-scope decisions with reasons, not just a feature list.
    - Metrics: baseline, target, measurement method, and owner; if missing, ask or mark TBD.
    - Rollout: communication / training / pilot / reversible configuration where relevant.

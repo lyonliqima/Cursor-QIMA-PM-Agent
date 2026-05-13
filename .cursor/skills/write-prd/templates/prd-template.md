@@ -108,6 +108,9 @@ No more than 7 stories. Format:
 
 > **US-N**: As a **{role}**, I want to {action}, so that {value}.
 
+Coverage rule:
+- Include concrete user actions from meeting notes and PM walkthroughs, not only high-level personas. If a source says users must generate, edit online, confirm, merge, preview, enable/disable, or review a specific section, represent that action in a user story unless it is clearly out of scope.
+
 ---
 
 # 5. Requirements
@@ -127,6 +130,10 @@ No more than 12 rows total.
 | **FR-1** | {{1-line function name}} | P0 | {{no more than 2 sentences describing what users see or can do; do not describe APIs or fields}} |
 
 If FRs naturally group into 2-3 modules, use sub-headings such as `### 5.1.1 Module A — {name}` and keep each module table to 6 rows or fewer.
+
+Business-rule coverage:
+- Meeting-note rules that change user-visible behavior must appear in the relevant FR row, not only in a Jira appendix. Examples: independent display rules, order-level enable/disable, no-duplicate output, fallback values, overwrite warnings, and section merge behavior.
+- Ticket lists prove source coverage; they do not replace product requirements.
 
 ## 5.2 Out of Scope
 
@@ -178,6 +185,9 @@ No more than 1 AC per FR. Format:
 > - Given {{precondition}}
 > - When {{action}}
 > - Then {{observable result}}
+
+AC coverage rule:
+- If an FR note contains a behavior-changing condition such as "must still show", "can enable/disable", "do not duplicate", "fallback to X", or "warn before overwrite", add a matching AC that makes the behavior testable.
 
 ---
 
