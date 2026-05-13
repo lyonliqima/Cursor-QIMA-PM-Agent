@@ -283,6 +283,35 @@ Run a light UX review at PRD level. Do not critique visual design details unless
 | Stale information cleanup | The PRD does not preserve outdated phone numbers, URLs, brand names, legacy labels, or removed features. |
 | Cognitive load | Tables, forms, reports, and dashboards avoid unnecessary fields and make status / exceptions easy to scan. |
 
+## Sprint Review 20-Point Checklist
+
+Use this checklist as a concrete evidence scan derived from QSP Sprint Review feedback. For each applicable item, mark Pass / Warning / Fail in your notes. Do not dump the full checklist into the final answer unless the user asks for a scored audit; instead surface the failed / warning items as High / Medium / Low findings.
+
+| ID | Check | What to look for |
+|---|---|---|
+| A1 | Numeric success metric | Specific baseline/target such as "from X to Y"; vague "improve experience" fails. |
+| A2 | Metric per major feature | Each major feature has a way to measure whether it worked. |
+| A3 | Why now and differentiator | Background explains what is different versus current solution or alternatives. |
+| B4 | User-facing copy | Emails, buttons, CTA labels, helper text, and error messages are specified when relevant. |
+| B5 | User journey / state flow | PRD explains when users see what, with steps or state transitions. |
+| B6 | Time zone handling | Date/time/deadline behavior states display and trigger timezone for global users. |
+| B7 | Multi-region handling | Multi-language, translation ownership, currency, or regional behavior is covered when relevant. |
+| C8 | Buildable rules | Fields, display/hide rules, validation, defaults, and trigger conditions are concrete enough to implement. |
+| C9 | Location in product | Page, module, menu, entry point, and placement are named. |
+| C10 | Document structure | Clear headings, tables, lists; no long unstructured text blocks. |
+| C11 | Validation and dirty data | User input validation, duplicate detection, dirty-data handling, and uniqueness rules are covered. |
+| D12 | Cross-team dependency plan | External teams, integration windows, E2E testing owner, and blockers are listed. |
+| D13 | API / third-party test setup | Sandbox, test account, API docs, access token, or integration guide are provided when applicable. |
+| D14 | Capacity / rate limit / fallback | External service limits, expected volume, failure fallback, and degradation behavior are covered. |
+| D15 | Reusability | Component / capability reuse and standardization across teams or customers are considered. |
+| E16 | Phased release | Pilot / beta / phased rollout exists instead of implicit big-bang launch. |
+| E17 | Review and sign-off | Product approver, tech reviewer, QA owner, and sign-off process are named or explicitly TBD. |
+| E18 | BAU / bug impact | Impact on existing flows, bugs, regression areas, and trade-offs with BAU work are addressed. |
+| E19 | Data sync failure handling | Sync mode, retry, consistency check, and failure handling are specified when data moves across systems. |
+| E20 | Exception handling | At least three relevant abnormal cases are covered: timeout, empty/dirty data, permission, concurrency, duplicate submit, external dependency failure. |
+
+When the user explicitly asks for a checklist-style review, output an overall score as `Pass count / applicable items`, with each Warning/Fail quoting PRD evidence and stating exactly what to add.
+
 ## Finding priority
 
 | Priority | Definition |
@@ -299,6 +328,8 @@ Additional severity calibration:
 - Missing China-market adaptation -> Medium, or High if `.com` access, payment, communication, or localization constraints block use.
 - TIC B2B missing RBAC, workflow state, audit trail, data integrity, compliance impact, or integration ownership -> High.
 - TIC B2B weak list/table/form UX, reporting, self-service, or notification strategy -> Medium unless it creates operational or compliance risk.
+- Sprint-review checklist Fail on buildability, product location, cross-team dependency, sign-off, sync failure handling, or exception handling -> High when it blocks implementation or release safety; otherwise Medium.
+- Sprint-review checklist Fail on metrics, user-facing copy, time zone, multi-region, reusability, or phased rollout -> Medium by default, High if it affects committed launch scope.
 
 ## Output format
 
@@ -359,6 +390,9 @@ Return exactly this structure:
 
 ### UX Structural Scan
 - Copy precision / action priority / consistency / stale information / cognitive-load findings or "No structural UX issues found"
+
+### Sprint Review Checklist Signals
+- A1-E20 warning/fail highlights, or "No major sprint-review checklist gaps"
 
 ### Codebase / Jira / Confluence Risks
 - [Risk surfaced only by external evidence, not obvious from the PRD]
