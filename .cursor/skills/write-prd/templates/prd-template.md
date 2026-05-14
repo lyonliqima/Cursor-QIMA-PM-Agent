@@ -193,50 +193,56 @@ AC coverage rule:
 
 # 8. Analytics & Tracking
 
+Write this section only with confirmed measurement intent. If baseline, target, owner, or measurement method is unknown, keep the item short and mark the missing part as TBD; do not invent proxy metrics.
+
 ## 8.1 Events to Track
 
 | Event | Trigger | Key business fields |
 | --- | --- | --- |
 
-No more than 12 rows.
+No more than 8 rows. Include only events that the team is likely to instrument or review.
 
 ## 8.2 Success Metrics
 
 **Leading (within 30 days)**:
 
-- **{{metric}}**: {{target with number, e.g. >= 60%}}
+- **{{metric}}**: {{confirmed target, or TBD — owner/source needed}}
 - No more than 4 items
 
 **Lagging (within 3 months)**:
 
-- **{{metric}}**: {{target}}
+- **{{metric}}**: {{confirmed target, or TBD — owner/source needed}}
 - No more than 3 items
 
 ## 8.3 Measurement Method
 
-No more than 4 sentences: data source, dashboard owner, and review cadence.
+No more than 3 sentences: data source, dashboard owner, and review cadence. If unknown, write one sentence: `Measurement owner / dashboard TBD — PM to confirm before launch.`
 
 ---
 
 # 9. Dependencies & Risks (Optional — keep when project complexity requires it)
+
+Keep this section lean. Include only dependencies and risks that are specific to this PRD and backed by source material or PM confirmation. Delete generic risks.
 
 ## 9.1 Dependencies
 
 | Dependency | Description (1 line) | Owner |
 | --- | --- | --- |
 
-No more than 8 rows. Use bucket names such as Frontend, Backend, Mail, Legal, BI, or Platform; do not list repos.
+No more than 6 rows. Use bucket names such as Frontend, Backend, Mail, Legal, BI, or Platform; do not list repos.
 
 ## 9.2 Risks & Mitigations
 
 | Risk | Impact | Probability | Mitigation |
 | --- | --- | --- | --- |
 
-No more than 6 rows. Probability uses High / Medium / Low.
+No more than 5 rows. Probability uses High / Medium / Low. Each mitigation must be an action, not a vague phrase such as "align with team" or "monitor closely".
 
 ---
 
 # 10. Rollout & Release Plan
+
+Write only confirmed rollout decisions. If pilot group, date, signer, training, or release sequence is unknown, ask the PM or keep a single TBD row; do not fabricate a phased rollout just to fill the template.
 
 ## 10.1 Phasing
 
@@ -246,15 +252,15 @@ No more than 6 rows. Probability uses High / Medium / Low.
 - Scope: {{FR list, by ID}}
 - Estimate: {{honest estimate or "pending dev estimate"}}
 
-Repeat for Phase B and C when needed.
+Repeat for Phase B and C only when the source material or PM confirms distinct phases.
 
 ## 10.2 Beta / Pilot Plan
 
-No more than 5 numbered steps from internal dogfood to GA.
+No more than 4 numbered steps from internal dogfood to GA. If no pilot is confirmed, write `Pilot plan TBD — PM to confirm whether v1 needs a controlled rollout.`
 
 ## 10.3 Release Gates
 
-3 gates with named signers:
+Use confirmed gates with named signers. If gates are not confirmed, write one concise TBD / Open Question instead of inventing gate names or signers.
 
 1. **Tech Gate** ({{Eng Lead}} + {{QA Lead}}): {{exit criterion with number}}
 2. **Business Gate** ({{Sponsor}}): {{exit criterion}}
@@ -264,20 +270,22 @@ No more than 5 numbered steps from internal dogfood to GA.
 
 # 11. Open Questions & Next Steps (Optional — usually keep)
 
+Use this section only for decisions that matter. Do not park vague reminders here.
+
 ## 11.1 Open Questions
 
 | # | Question | Owner to answer | Blocks v1? |
 | --- | --- | --- | --- |
 | Q1 | {{question}} | {{name}} | {{No, but affects ...}} or **Yes — {{reason}}** |
 
-No more than 6 rows. The blocker column only allows the two shapes above.
+No more than 6 rows. The blocker column only allows the two shapes above. Each question must include context and a concrete decision to make, not just "confirm X".
 
 ## 11.2 Next Steps
 
 | Step | Owner | When |
 | --- | --- | --- |
 
-No more than 6 rows.
+No more than 5 rows. Each step must have an owner and a real next action.
 
 ---
 

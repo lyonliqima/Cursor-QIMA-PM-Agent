@@ -115,7 +115,7 @@ Beyond section presence and order, the doc must conform to `${CLAUDE_PLUGIN_ROOT
 - Section 8.1 events use `namespace.action` snake_case.
 - Section 8.2 is split into `**Leading (...)**` and `**Lagging (...)**` with bold metric labels.
 - Section 9.2 Risks probability column uses `High / Medium / Low`.
-- Section 10.3 Release Gates has at least 3 gates, with distinct signers in parentheses.
+- Section 10.3 Release Gates includes confirmed gates with distinct signers, or a concise TBD / Open Question when gates are not yet confirmed. Do not flag a PRD for lacking three gates if the source material does not confirm them.
 - Section 11.1 Open Questions blocker column uses only `No, but affects ...` or `**Yes — ...**`, never bare yes/no.
 - Footer has an italic single-line next action by the document owner.
 - IDs use `**FR-{letter}{n}**`, `**US-{n}**`, `**AC-N (FR-X: label)**`.
@@ -144,10 +144,10 @@ Every material claim must be supported by at least one source category:
 | Business rule / scope decision | PRD source text, Confluence decision note, meeting note, Jira discussion |
 | Current system behavior | code reference, codebase report, Tech Design, existing PRD with implementation status |
 | Prior issue / pain point | Jira bug, support ticket, stakeholder quote, analytics / dashboard source |
-| Metric target | baseline, dashboard owner, denominator, time window, stakeholder approval |
-| Timeline / rollout | Jira epic plan, release note, dependency owner confirmation |
+| Metric target | baseline, dashboard owner, denominator, time window, stakeholder approval, explicit PM questionnaire answer |
+| Timeline / rollout | Jira epic plan, release note, dependency owner confirmation, explicit PM questionnaire answer |
 
-Uncited facts are not "minor wording gaps". They are Medium by default and High when they affect FR scope, AC, rollout, cost, compliance, or engineering ownership.
+Uncited facts are not "minor wording gaps". They are Medium by default and High when they affect FR scope, AC, rollout, cost, compliance, or engineering ownership. If a claim is not supported by source material or an explicit PM answer, recommend moving it to a heuristic PM questionnaire before PRD generation continues.
 
 ### 4. FR image coverage
 

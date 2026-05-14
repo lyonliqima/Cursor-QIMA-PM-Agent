@@ -37,11 +37,11 @@ Run this self-audit on the synthesis output. For each section, if the answer to 
 | **§6 Design** | Are edge cases enumerated (≥ 5 listed)? | Multi-version / unmatched / hardware disconnect / overflow / conflict. |
 | **§7 AC** | Does each AC reference a named field or schema element? | "Given config replicate_count = 2..." — not "Given user is logged in". |
 | **§8 Analytics** | Are events listed with key fields, not just names? | `weigh.weight_captured(order_id, shortname, source=balance/manual)` |
-| **§8 Metrics** | Split into Leading vs Lagging with numbers? | Leading 30d / Lagging 90d, with thresholds. |
+| **§8 Metrics** | Split into Leading vs Lagging only when measurement intent is confirmed? | If baseline / target / owner is missing, ask PM or write a concise TBD; do not invent thresholds. |
 | **§9 Risks** | Does each risk have probability AND mitigation that's executable? | Probability column + "do X by date Y" — not "improve communication". |
 | **§9 Dependencies** | Is each dep owned by a named person/team? | "TBD" is OK if explicit; "Dev" alone is not. |
-| **§10 Rollout** | Are phases lettered/numbered with explicit dependencies between phases? | Phase B depends on Phase A complete + hardware spike done. |
-| **§10 Release Gates** | ≥ 3 gates with distinct signers? | Tech / Business / Data — Pattern 6. |
+| **§10 Rollout** | Are phases included only when confirmed, with explicit dependencies? | If phases are not confirmed, ask PM or keep one concise TBD instead of inventing rollout steps. |
+| **§10 Release Gates** | Are confirmed gates tied to distinct signers and exit criteria? | If gates are not confirmed, add a concise Open Question naming who must confirm them. |
 | **§11 OQ** | Each OQ has answerer + "Blocks v1?" flag? | Pattern 7. |
 
 ---

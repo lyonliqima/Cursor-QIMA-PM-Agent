@@ -180,11 +180,11 @@ Do not backtick PRD-internal terms, product names, or generic English words.
 ```markdown
 **Leading (within 30 days)**:
 
-* **{metric name}**: {target with operator and number}
+* **{metric name}**: {confirmed target, or TBD — owner/source needed}
 
 **Lagging (within 3 months)**:
 
-* **{metric name}**: {target}
+* **{metric name}**: {confirmed target, or TBD — owner/source needed}
 ```
 
 ### 3.7 Phasing
@@ -202,7 +202,7 @@ Each phase uses this order:
 
 ### 3.8 Release Gates
 
-Numbered list, at least 3 gates with distinct signers:
+Numbered list of confirmed gates with distinct signers. Do not fabricate gates; if gates are not confirmed, use one concise TBD / Open Question instead.
 
 ```markdown
 1. **Tech Gate** (Dev + QA): {specific exit criteria with threshold}
@@ -300,7 +300,7 @@ Before sign-off, `prd-critique` verifies:
 - [ ] Section 8.1 events use dotted snake_case when implementation event names are needed.
 - [ ] Section 8.2 is split into Leading and Lagging blocks.
 - [ ] Section 9.2 risks table has all 4 columns and High / Medium / Low probability values.
-- [ ] Section 10.3 has at least 3 gates with distinct signers.
+- [ ] Section 10.3 has confirmed release gates with distinct signers, or a concise TBD / Open Question when gates are not yet confirmed. Do not fabricate gates to satisfy the template.
 - [ ] Section 11.1 uses the allowed blocker-column shapes.
 - [ ] Footer is italic and names a concrete next action.
 - [ ] Code identifiers are backticked only when appropriate.

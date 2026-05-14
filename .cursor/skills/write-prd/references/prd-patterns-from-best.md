@@ -104,9 +104,9 @@ At the end of the PRD (or at the end of any FR with material ambiguity), add a *
 
 **Origin**: Multilingual Report PRD §12.
 
-## Pattern 6 · Three independent Release Gates (Tech / Business / Data)
+## Pattern 6 · Independent confirmed Release Gates (Tech / Business / Data)
 
-Migration / integration / data-pipeline PRDs MUST split release gates into at least three independent sign-offs, each with a distinct signer. Single "ready to launch?" gate hides the failure modes that actually kill these projects (most often: data migration quality).
+Migration / integration / data-pipeline PRDs should split confirmed release gates into independent sign-offs, each with a distinct signer. Single "ready to launch?" gate hides the failure modes that actually kill these projects (most often: data migration quality). Do not fabricate gates when signers or exit criteria are not confirmed; add a concise TBD / Open Question instead.
 
 **Template** (Rollout & Release Plan section):
 
@@ -116,7 +116,7 @@ Migration / integration / data-pipeline PRDs MUST split release gates into at le
 > 2. **Business Gate** (Product Owner + business lead + lab/site manager) — UAT sign-off; ≥ 5 sample orders processed end-to-end with no discrepancy vs legacy.
 > 3. **Data Gate** (PM + data owner) — config-table migration verified; downstream consumers (analysis software, reporting module) successfully read the new data; ≥ 50 records compared against legacy with zero diff.
 
-**Pass criterion**: at least 3 gates with distinct signers; each gate has a falsifiable pass condition (numbers or named artifacts), not "looks good".
+**Pass criterion**: confirmed gates have distinct signers and falsifiable pass conditions (numbers or named artifacts), not "looks good". If gates are not confirmed, the PRD contains one explicit Open Question naming who must confirm the release gates.
 
 **When to apply**: any PRD where (a) data migration is involved, (b) hardware/external system integration, (c) the feature replaces an existing tool/workflow.
 

@@ -15,7 +15,7 @@ PRD body, excluding appendices:
 - Section 6 Edge Cases: no more than 8 items. Put overflow in Appendix only if truly needed.
 - Section 11.1 Open Questions: no more than 6 rows. Each item should be one sentence.
 
-If the PRD exceeds the limit, cut Sections 5, 6, and 7 first. Most bloat comes from copying Tech Design detail into those sections.
+If the PRD exceeds the limit, cut unconfirmed filler from Sections 8, 9, 10, and 11 first, then cut technical depth from Sections 5, 6, and 7. Most bloat comes from invented metrics / rollout / risks or copying Tech Design detail into the PRD body.
 
 ---
 

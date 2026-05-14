@@ -124,13 +124,15 @@ If there is no baseline, write "Baseline TBD — owner to confirm before launch"
 
 ### Rollout
 
-Include the human rollout work when relevant:
+Include the human rollout work only when relevant and supported by source material or PM confirmation:
 
 - Communication owner.
 - Pilot / beta group.
 - Training or SOP update.
 - Reversible configuration or fallback.
 - Release gate with named signer.
+
+Do not invent rollout tasks, pilot groups, training plans, or signers just to make this section look complete. If not confirmed, ask the PM or mark the decision as TBD.
 
 ### Open Questions
 
