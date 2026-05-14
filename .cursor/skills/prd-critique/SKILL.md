@@ -103,7 +103,7 @@ Section 12 / ROVO table is deprecated and must not appear.
 
 Beyond section presence and order, the doc must conform to `${CLAUDE_PLUGIN_ROOT}/skills/write-prd/references/format-conventions.md`, pinned to the Sample weighing and labeling function PRD as the canonical example. Run the validation checklist as part of every review:
 
-- Section titles match canonical form exactly, for example `# 1. Overview`; template-only tags like `(Mandatory)` should not appear in the published PRD.
+- Section titles match canonical form exactly, for example `# 1. Overview`; template-only tags like `(Mandatory)`, `（Mandatory）`, `(Optional)`, or `（Optional —— ...）` should not appear in the published PRD. **Never** report missing Mandatory/Optional heading labels as a finding; the correct finding is the opposite: remove those labels when present.
 - Section 1 Overview meta-table has 6 rows: `Document Owner`, `Date`, `Version`, `Target System`, `Phase`, `Related Materials`.
 - Confluence-rendered tables occupy the full page width. Narrow content-width tables in Stakeholders, FRs, Risks, Rollout Gates, or Open Questions are formatting findings.
 - Section 3 Stakeholders lists named people with direct ownership only; generic rows such as `Business / Product Sponsor`, `Delivery Team`, `Backend Support`, `Frontend Support`, or team-only names are findings unless a specific person and responsibility are confirmed.

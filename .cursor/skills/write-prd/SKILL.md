@@ -32,6 +32,8 @@ If unsure whether to ask, ASK. Verbose interview is recoverable; PRD with fabric
 
 **Short by default.** Target the body to **≤ 250 lines / ≤ 6 pages of Confluence**. If the PM wants engineering-grade depth, run `ticket-breakdown` afterwards — do not bloat the PRD itself.
 
+**Online-first for existing PRDs.** When optimizing, refreshing, reviewing-and-updating, or rewriting an existing Confluence PRD, always fetch the latest online Confluence page first and use that body as the editing base. Local `_prd-run` files, Desktop drafts, exported markdown, transcripts, and prior agent drafts are reference material only; never use them as the base for writing back to Confluence unless the user explicitly says to replace the online page from that file. Preserve existing sections, appendices, Jira lists, source notes, and user-authored wording by default; remove or restructure existing content only when the user explicitly asks or when you have confirmed it is obsolete.
+
 ---
 
 ## Mandatory preparation
@@ -60,6 +62,13 @@ Collect from the user (explicit or via the elicitation form):
 - Known related Jira epics or Confluence pages (as seeds)
 - Target Confluence Space + parent page
 - Deadline / urgency (affects depth of source scan)
+
+If the target is an **existing Confluence PRD page**, Phase 0 must include:
+
+1. Fetch the latest page body from Confluence with `getConfluencePage` (or the current Atlassian equivalent).
+2. Save or mentally mark that fetched body as the canonical base for edits.
+3. Treat all local PRD files and old drafts as supporting sources only.
+4. Plan updates as an incremental rewrite: preserve original content unless a specific source or user instruction justifies changing it.
 
 Output: `context-manifest.md` listing every input source — Figma section URL recorded in its own row.
 
@@ -359,6 +368,7 @@ Inline: AskUserQuestion · PRD body writing · Confluence write.
 3. **Jira creation** — NOT this skill's job (use `ticket-breakdown`).
 4. **Codebase report freshness** — for product/software PRDs, do not draft without either a fresh local codebase report or an explicit PM confirmation to skip.
 5. **History report freshness** — do not draft without either a fresh Confluence/Jira history report or an explicit PM confirmation to skip.
+6. **Existing PRD online-base gate** — before updating an existing Confluence PRD, verify the latest online page was fetched in this run and used as the base.
 
 NEVER:
 - Write to a published Confluence page without explicit confirmation
@@ -367,6 +377,8 @@ NEVER:
 - Improvise formatting — match `references/format-conventions.md`
 - Exceed the length budget without an explicit user request to go deep
 - Paste Phase 1.5 Q&A blocks into PRD body — they are working notes, not deliverable
+- Overwrite an existing online PRD from a local archive, `_prd-run` draft, transcript, or generated file. Local files can inform the edit, but the latest Confluence body is the base.
+- Drop existing appendices, Jira ticket lists, source ledgers, comments, or historical notes unless the user explicitly asks to remove them or confirms they are obsolete.
 - Treat stale codebase notes as current without checking age/scope
 - Treat the newest Confluence/Jira page as the only truth without checking linked historical context
 
