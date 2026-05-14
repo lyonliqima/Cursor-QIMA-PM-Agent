@@ -351,7 +351,7 @@ Return exactly this structure:
 ### High Priority
 - **[Section X]** [Issue] -> **Why it matters:** [development/business risk] -> **Fix:** [specific recommendation]
   **Evidence:** [PRD section + Confluence/Jira/code reference, or "PRD-only"]
-  **Verification needed?** [yes/no; if yes, explain what cannot be determined from the doc alone]
+  **Verification needed?** [yes/no; if yes, include a PM question with context, trade-off, options/default]
 
 ### Medium Priority
 - ...
@@ -411,6 +411,7 @@ YES / NO
 - Reference specific sections or paragraph markers; avoid vague locations.
 - Do not manufacture issues. If the document is strong on a dimension, say so under Strengths.
 - When an issue requires information only the user knows, mark `Verification needed? yes`.
+- For every `Verification needed? yes`, include a heuristic PM question that gives context, states the trade-off, and offers concrete options or a recommended default. Do not write bare questions such as "confirm owner" or "define metric".
 - TBD placeholders are acceptable at draft stage. Flag only when a TBD should have been asked about before drafting.
 - External evidence can create findings even when the PRD reads well. A polished contradiction is still a contradiction.
 - Avoid drive-by nitpicks. If it does not change business clarity, buildability, testability, rollout safety, or stakeholder alignment, it is probably not worth a finding.

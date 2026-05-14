@@ -38,10 +38,10 @@ Before any work, confirm you have:
 
 1. **Feature scope** — one-sentence description of what's being built
 2. **Target Confluence location** — Space key + parent page URL (ask user if not given)
-3. **Template** — default to `qima-prd-writing-guide`; confirm if user wants otherwise
+3. **Template** — always use the default `qima-prd-writing-guide`; do not ask the PM to confirm the template for new PRDs
 4. **Primary objective** — the confirmed business goal this PRD serves, in plain language
 
-If any of these four are missing, ASK the user first. Do not guess.
+If feature scope, target Confluence location, or primary objective is missing, ASK the user first. Do not ask about the template unless the PM explicitly requests a non-default format.
 
 ---
 
@@ -100,6 +100,13 @@ Before drafting any product/software PRD, run or refresh `codebase-understanding
    - new Jira / Confluence / Figma seeds were provided after the report was created, OR
    - the PM says "重新研究", "深入看看代码", "refresh", "old", or similar.
 3. If no fresh report exists, run `codebase-understanding` in **deep PRD-prep mode**. Use a focused 5-minute scan budget for codebase discovery, then proceed with the best evidence found and mark remaining gaps.
+
+**Default repository discovery**:
+
+- Default GitHub organization for QIMA code search is `https://github.com/asiainspection`.
+- If the PM does not provide a repo path, do **not** ask for one first. Derive repo-search keywords from the feature scope, Jira titles, Confluence titles, service names, page names, and business terms, then search / identify likely repositories under the `asiainspection` org.
+- Prefer already-cloned local repos when they match the discovered repo names; otherwise report which likely GitHub repos should be cloned or inspected.
+- If discovery is inconclusive after the focused scan, continue with the best evidence found and mark the codebase gap explicitly in the local report and PRD open questions.
 
 **Required local outputs**:
 
@@ -187,6 +194,19 @@ Use `AskUserQuestion`. Prioritize, but cover ALL relevant items — under-asking
 Per card: no more than 3 questions, single topic per card. Multi-card rounds are normal. Cap at **5 rounds**. Unresolved at round 5 -> "Open question" in Section 11 and move on.
 
 If a question feels minor but you're truly uncertain, ASK ANYWAY — the cost of asking is small; the cost of fabricating a detail in the PRD is large.
+
+**Heuristic PM question style**:
+
+When asking the PM, do not send bare "please confirm X" questions. Each question should help the PM make a decision:
+
+- Give the source context in one short sentence: what you found and why it is ambiguous.
+- Explain the trade-off or consequence: what changes in scope, rollout, metric, owner, or user experience depending on the answer.
+- Offer 2-3 concrete options or a recommended default when reasonable.
+- Ask for a decision, not an essay. Good format: "I found A, but B suggests C. Should v1 choose Option 1 (...), Option 2 (...), or defer? My default recommendation is Option 1 because ...".
+- If the PM does not answer, state how it will appear in the PRD: Open Question, TBD metric, out of scope, or assumed v1 behavior.
+
+Bad: "What is the success metric?"
+Good: "Meeting notes show the goal is reducing manual report edits, but no baseline is given. Should we measure (A) % of customized reports requiring post-generation Word edits, (B) average minutes spent per customized report, or (C) defect/rework count? My default is A for v1 because report teams can validate it fastest."
 
 ### Phase 2.5 · Depth interview
 
